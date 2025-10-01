@@ -1,6 +1,10 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+body, #root {
+  @apply h-screen;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
