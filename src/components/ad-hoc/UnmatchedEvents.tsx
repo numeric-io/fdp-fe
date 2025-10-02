@@ -1,10 +1,11 @@
+import { SearchField } from '@/components/ui/numeric-ui/searchField';
 import {
   AllCommunityModule,
   ModuleRegistry,
   type ColDef,
 } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -15,6 +16,8 @@ interface RowData {
 }
 
 export const UnmatchedEvents = () => {
+  const [query, setQuery] = useState('');
+
   const colDefs = useMemo<ColDef<RowData>[]>(
     () => [
       { field: 'name', headerName: 'Name' },
@@ -34,8 +37,11 @@ export const UnmatchedEvents = () => {
   );
 
   return (
-    <div className="h-full">
-      <AgGridReact columnDefs={colDefs} rowData={rowData} />
+    <div className="h-full flex flex-col gap-2">
+      <SearchField query={query} setQuery={setQuery} />
+      <div className="flex-1">
+        <AgGridReact columnDefs={colDefs} rowData={rowData} />
+      </div>
     </div>
   );
 };
