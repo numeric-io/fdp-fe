@@ -1,37 +1,33 @@
 import { SearchField } from '@/components/ui/numeric-ui/searchField';
+import { updateUnmatchedEvents } from '@/lib/store/stores/rateCalculator/actions';
+import { useUnmatchedEvents } from '@/lib/store/stores/rateCalculator/getters';
+import type { UnmatchedEvent } from '@/lib/store/stores/rateCalculator/types';
 import {
   AllCommunityModule,
   ModuleRegistry,
   type ColDef,
 } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-interface RowData {
-  name: string;
-  age: number;
-  email: string;
-}
-
 export const UnmatchedEvents = () => {
   const [query, setQuery] = useState('');
+  const unmatchedEvents = useUnmatchedEvents();
 
-  const colDefs = useMemo<ColDef<RowData>[]>(
-    () => [
-      { field: 'name', headerName: 'Name' },
-      { field: 'age', headerName: 'Age' },
-      { field: 'email', headerName: 'Email', flex: 1 },
-    ],
-    [],
-  );
+  useEffect(() => {
+    updateUnmatchedEvents([
+      { id: '1', name: 'John Doe' },
+      { id: '2', name: 'Jane Smith' },
+      { id: '3', name: 'Jim Beam' },
+    ]);
+  }, []);
 
-  const rowData = useMemo<RowData[]>(
+  const colDefs = useMemo<ColDef<UnmatchedEvent>[]>(
     () => [
-      { name: 'John Doe', age: 25, email: 'john.doe@example.com' },
-      { name: 'Jane Smith', age: 30, email: 'jane.smith@example.com' },
-      { name: 'Jim Beam', age: 35, email: 'jim.beam@example.com' },
+      { field: 'id', headerName: 'ID' },
+      { field: 'name', headerName: 'Name', flex: 1 },
     ],
     [],
   );
@@ -40,7 +36,7 @@ export const UnmatchedEvents = () => {
     <div className="h-full flex flex-col gap-2">
       <SearchField query={query} setQuery={setQuery} />
       <div className="flex-1">
-        <AgGridReact columnDefs={colDefs} rowData={rowData} />
+        <AgGridReact columnDefs={colDefs} rowData={unmatchedEvents} />
       </div>
     </div>
   );
