@@ -1,6 +1,7 @@
 export interface UnmatchedEvent {
   id: string;
   name: string;
+  contractID: string;
 }
 
 export interface Contract {

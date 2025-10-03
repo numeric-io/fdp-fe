@@ -117,10 +117,15 @@ export const SAMPLE_CONTRACTS: Contract[] = [
     name: 'RCO Built',
     rateRules: [...SAMPLE_CONTRACT_RATE_RULES],
   },
+  {
+    id: 'sample_contract',
+    name: 'Sample Contract',
+    rateRules: [],
+  },
 ];
 
 export const SAMPLE_UNMATCHED_EVENTS: UnmatchedEvent[] = [
-  { id: '1', name: 'John Doe' },
-  { id: '2', name: 'Jane Smith' },
-  { id: '3', name: 'Jim Beam' },
+  { id: '1', name: 'Event 1', contractID: 'rco_built' },
+  { id: '2', name: 'Event 2', contractID: 'rco_built' },
+  { id: '3', name: 'Event 3', contractID: 'rco_built' },
 ];

@@ -1,16 +1,29 @@
 import { createSelector } from '../../createSelector';
 import type { Store } from '../../types';
+import type { Contract, ContractRateRule, UnmatchedEvent } from './types';
 
-export const getUnmatchedEvents = (store: Store) =>
+export const getUnmatchedEvents = (store: Store): UnmatchedEvent[] =>
   store.rateCalculatorStore.unmatchedEvents;
 export const useUnmatchedEvents = createSelector(getUnmatchedEvents);
 
-export const getContracts = (store: Store) =>
+export const getContracts = (store: Store): Contract[] =>
   store.rateCalculatorStore.contracts;
 export const useContracts = createSelector(getContracts);
 
-export const getContractRateRules = (store: Store, contractID: string) =>
+export const getContract = (
+  store: Store,
+  contractID: string,
+): Contract | null =>
   store.rateCalculatorStore.contracts.find(
     (contract) => contract.id === contractID,
-  )?.rateRules;
+  ) ?? null;
+export const useContract = createSelector(getContract);
+
+export const getContractRateRules = (
+  store: Store,
+  contractID: string,
+): ContractRateRule[] =>
+  store.rateCalculatorStore.contracts.find(
+    (contract) => contract.id === contractID,
+  )?.rateRules ?? [];
 export const useContractRateRules = createSelector(getContractRateRules);
