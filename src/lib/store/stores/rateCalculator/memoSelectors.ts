@@ -1,7 +1,11 @@
 import { partition } from '@/lib/utils';
 import { useMemo } from 'react';
-import { useContracts, useUnmatchedEvents } from './getters';
-import type { Contract } from './types';
+import {
+  useContractRateRules,
+  useContracts,
+  useUnmatchedEvents,
+} from './getters';
+import type { Contract, ContractRateRule } from './types';
 
 export const useContractGroupedByUnmatchedEvents = (): {
   contractsWithUnmatchedEvents: Contract[];
@@ -20,4 +24,18 @@ export const useContractGroupedByUnmatchedEvents = (): {
       );
     return { contractsWithUnmatchedEvents, contractsWithoutUnmatchedEvents };
   }, [unmatchedEvents, contracts]);
+};
+
+export const useContractRateRulesBySKUID = (
+  contractID: string,
+  skuID: string | null,
+): ContractRateRule[] => {
+  const rateRules = useContractRateRules(contractID);
+
+  return useMemo(() => {
+    if (skuID === null) {
+      return rateRules;
+    }
+    return rateRules.filter((rule) => rule.skuID === skuID) ?? [];
+  }, [rateRules, skuID]);
 };

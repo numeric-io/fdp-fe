@@ -9,8 +9,8 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_consumer_new_origination',
     name: 'CLA Consumer New Origination',
-    contract_id: 'rco_built',
-    sku: 'CLA',
+    contractID: 'rco_built',
+    skuID: 'CLA',
     rule: {
       op: Operator.And,
       conditions: [
@@ -34,8 +34,8 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_consumer_general',
     name: 'CLA Consumer General',
-    contract_id: 'rco_built',
-    sku: 'CLA',
+    contractID: 'rco_built',
+    skuID: 'CLA',
     rule: {
       op: Operator.And,
       conditions: [
@@ -54,8 +54,8 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_commercial_general',
     name: 'CLA Commercial General',
-    contract_id: 'rco_built',
-    sku: 'CLA',
+    contractID: 'rco_built',
+    skuID: 'CLA',
     rule: {
       op: Operator.And,
       conditions: [
@@ -74,8 +74,8 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_ignore_non_upfront',
     name: 'CLA Ignore Non Upfront',
-    contract_id: 'rco_built',
-    sku: 'CLA',
+    contractID: 'rco_built',
+    skuID: 'CLA',
     rule: {
       op: Operator.And,
       conditions: [
@@ -93,8 +93,8 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'inspector_onsite_transactional',
     name: 'Inspector Onsite Transactional',
-    contract_id: 'rco_built',
-    sku: 'inspector_onsite',
+    contractID: 'rco_built',
+    skuID: 'inspector_onsite',
     rule: {
       op: Operator.And,
       conditions: [
@@ -116,11 +116,16 @@ export const SAMPLE_CONTRACTS: Contract[] = [
     id: 'rco_built',
     name: 'RCO Built',
     rateRules: [...SAMPLE_CONTRACT_RATE_RULES],
+    skus: [
+      { id: 'CLA', name: 'CLA' },
+      { id: 'inspector_onsite', name: 'Inspector Onsite' },
+    ],
   },
   {
     id: 'sample_contract',
     name: 'Sample Contract',
     rateRules: [],
+    skus: [],
   },
 ];
 

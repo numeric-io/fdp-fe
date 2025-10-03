@@ -9,7 +9,7 @@ enum TabValue {
 
 export const POC = () => {
   return (
-    <Tabs defaultValue={TabValue.UnmatchedEvents} className="h-full">
+    <Tabs defaultValue={TabValue.RateCalculator} className="h-full">
       <TabsList>
         <TabsTrigger value={TabValue.RateCalculator}>
           Rate Calculator

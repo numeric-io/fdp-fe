@@ -4,10 +4,16 @@ export interface UnmatchedEvent {
   contractID: string;
 }
 
+export interface SKU {
+  id: string;
+  name: string;
+}
+
 export interface Contract {
   id: string;
   name: string;
   rateRules: ContractRateRule[];
+  skus: SKU[];
 }
 
 export interface RateCalculatorStore {
@@ -18,8 +24,8 @@ export interface RateCalculatorStore {
 export interface ContractRateRule {
   id: string;
   name: string;
-  contract_id: string;
-  sku: string;
+  contractID: string;
+  skuID: string;
   rule: Rule;
   rate: number;
   currency: string;
