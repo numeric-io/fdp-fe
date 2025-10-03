@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@import "./ag-grid-global.css";
+
 body, #root {
   @apply h-screen;
 }

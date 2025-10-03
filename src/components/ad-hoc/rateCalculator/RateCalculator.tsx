@@ -26,7 +26,11 @@ export const RateCalculator = () => {
         </div>
       </div>
       <div className="flex-1">
-        <RateRulesGrid contractID={selectedContractID} skuID={selectedSKUID} />
+        <RateRulesGrid
+          contractID={selectedContractID}
+          skuID={selectedSKUID}
+          setSelectedSKUID={setSelectedSKUID}
+        />
       </div>
     </div>
   );
