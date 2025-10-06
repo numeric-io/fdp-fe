@@ -7,6 +7,66 @@
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
+"@ast-grep/napi-darwin-arm64@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-darwin-arm64/-/napi-darwin-arm64-0.37.0.tgz#5cca85937dbe9a75b7e89ddc0cea595111e2d13d"
+  integrity sha512-QAiIiaAbLvMEg/yBbyKn+p1gX2/FuaC0SMf7D7capm/oG4xGMzdeaQIcSosF4TCxxV+hIH4Bz9e4/u7w6Bnk3Q==
+
+"@ast-grep/napi-darwin-x64@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-darwin-x64/-/napi-darwin-x64-0.37.0.tgz#433c19fb2584c81b2e04b1900430b7b547908319"
+  integrity sha512-zvcvdgekd4ySV3zUbUp8HF5nk5zqwiMXTuVzTUdl/w08O7JjM6XPOIVT+d2o/MqwM9rsXdzdergY5oY2RdhSPA==
+
+"@ast-grep/napi-linux-arm64-gnu@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-linux-arm64-gnu/-/napi-linux-arm64-gnu-0.37.0.tgz#2d7ea5cb97560cb704ff4e73daf5b372335387bf"
+  integrity sha512-L7Sj0lXy8X+BqSMgr1LB8cCoWk0rericdeu+dC8/c8zpsav5Oo2IQKY1PmiZ7H8IHoFBbURLf8iklY9wsD+cyA==
+
+"@ast-grep/napi-linux-arm64-musl@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-linux-arm64-musl/-/napi-linux-arm64-musl-0.37.0.tgz#dc35c759c71f9a3431b6d3764ce50074a6071bef"
+  integrity sha512-LF9sAvYy6es/OdyJDO3RwkX3I82Vkfsng1sqUBcoWC1jVb1wX5YVzHtpQox9JrEhGl+bNp7FYxB4Qba9OdA5GA==
+
+"@ast-grep/napi-linux-x64-gnu@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-linux-x64-gnu/-/napi-linux-x64-gnu-0.37.0.tgz#60957578911620da24f62b4f10c920290f0e5bf5"
+  integrity sha512-TViz5/klqre6aSmJzswEIjApnGjJzstG/SE8VDWsrftMBMYt2PTu3MeluZVwzSqDao8doT/P+6U11dU05UOgxw==
+
+"@ast-grep/napi-linux-x64-musl@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-linux-x64-musl/-/napi-linux-x64-musl-0.37.0.tgz#58f3d2b7461d23b4a998e8122e58705c555fc887"
+  integrity sha512-/BcCH33S9E3ovOAEoxYngUNXgb+JLg991sdyiNP2bSoYd30a9RHrG7CYwW6fMgua3ijQ474eV6cq9yZO1bCpXg==
+
+"@ast-grep/napi-win32-arm64-msvc@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-win32-arm64-msvc/-/napi-win32-arm64-msvc-0.37.0.tgz#15f330e317c017acb2d4b7862fe3c2b8c96eea15"
+  integrity sha512-TjQA4cFoIEW2bgjLkaL9yqT4XWuuLa5MCNd0VCDhGRDMNQ9+rhwi9eLOWRaap3xzT7g+nlbcEHL3AkVCD2+b3A==
+
+"@ast-grep/napi-win32-ia32-msvc@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-win32-ia32-msvc/-/napi-win32-ia32-msvc-0.37.0.tgz#2fa6802f79c627e59cdd6363f171917b624690f6"
+  integrity sha512-uNmVka8fJCdYsyOlF9aZqQMLTatEYBynjChVTzUfFMDfmZ0bihs/YTqJVbkSm8TZM7CUX82apvn50z/dX5iWRA==
+
+"@ast-grep/napi-win32-x64-msvc@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi-win32-x64-msvc/-/napi-win32-x64-msvc-0.37.0.tgz#66007757f0831e36f5576839999fbd265210ed64"
+  integrity sha512-vCiFOT3hSCQuHHfZ933GAwnPzmL0G04JxQEsBRfqONywyT8bSdDc/ECpAfr3S9VcS4JZ9/F6tkePKW/Om2Dq2g==
+
+"@ast-grep/napi@0.37.0":
+  version "0.37.0"
+  resolved "https://registry.yarnpkg.com/@ast-grep/napi/-/napi-0.37.0.tgz#e6a4806dfbbe570f4742fd9d048bdcc87328b29e"
+  integrity sha512-Hb4o6h1Pf6yRUAX07DR4JVY7dmQw+RVQMW5/m55GoiAT/VRoKCWBtIUPPOnqDVhbx1Cjfil9b6EDrgJsUAujEQ==
+  optionalDependencies:
+    "@ast-grep/napi-darwin-arm64" "0.37.0"
+    "@ast-grep/napi-darwin-x64" "0.37.0"
+    "@ast-grep/napi-linux-arm64-gnu" "0.37.0"
+    "@ast-grep/napi-linux-arm64-musl" "0.37.0"
+    "@ast-grep/napi-linux-x64-gnu" "0.37.0"
+    "@ast-grep/napi-linux-x64-musl" "0.37.0"
+    "@ast-grep/napi-win32-arm64-msvc" "0.37.0"
+    "@ast-grep/napi-win32-ia32-msvc" "0.37.0"
+    "@ast-grep/napi-win32-x64-msvc" "0.37.0"
+
 "@emnapi/core@^1.4.3", "@emnapi/core@^1.4.5", "@emnapi/core@^1.5.0":
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@emnapi/core/-/core-1.5.0.tgz#85cd84537ec989cebb2343606a1ee663ce4edaf0"
@@ -504,7 +564,7 @@
   resolved "https://registry.yarnpkg.com/@radix-ui/rect/-/rect-1.1.1.tgz#78244efe12930c56fd255d7923865857c41ac8cb"
   integrity sha512-HPwpGIzkl28mWyZqG52jiqDJ12waP11Pa1lGoiyUkIEuMLBP0oeK/C89esbXrxsky5we7dfd8U58nm0SgAWpVw==
 
-"@rsbuild/core@^1.5.6":
+"@rsbuild/core@^1.5.6", "@rsbuild/core@~1.5.13":
   version "1.5.13"
   resolved "https://registry.yarnpkg.com/@rsbuild/core/-/core-1.5.13.tgz#b8c7dd3f4ebf5b2deb87c2b409872626494cc97a"
   integrity sha512-P+TCvZCVpBYZ3GDdnzR/tZKicE41khJIqIRlJYnEc9dwUfX1/eqRf8lA8yrsbB5iZbSfj1iOoH1N25cCQ3hhuA==
@@ -522,6 +582,14 @@
   dependencies:
     "@rspack/plugin-react-refresh" "^1.5.1"
     react-refresh "^0.17.0"
+
+"@rslib/core@^0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@rslib/core/-/core-0.15.0.tgz#22b0b5ebcfcf260883e4dabaf55e5e62d5bd0b53"
+  integrity sha512-ZxDwEU38qsM32VpW4Dy7oNf6MxgrRAgYxVsuv8v+aKm4pIOSs0nzDTJHsa2vhKjFdyRtgnHObZ6pjoJ0cmcU3A==
+  dependencies:
+    "@rsbuild/core" "~1.5.13"
+    rsbuild-plugin-dts "0.15.0"
 
 "@rspack/binding-darwin-arm64@1.5.8":
   version "1.5.8"
@@ -2684,6 +2752,13 @@ reusify@^1.0.4:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.1.0.tgz#0fe13b9522e1473f51b558ee796e08f11f9b489f"
   integrity sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==
+
+rsbuild-plugin-dts@0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/rsbuild-plugin-dts/-/rsbuild-plugin-dts-0.15.0.tgz#6f1a1304d0af2c4393f604c86f553678be4f0196"
+  integrity sha512-qKGCtv4fxKxWZb3DxHpgmP6uY+JAckovBE/92APerORvrtEtqwY6sAEY2UOaRo2ErENOiWhf5yFLE5EhdUsj9A==
+  dependencies:
+    "@ast-grep/napi" "0.37.0"
 
 run-parallel@^1.1.9:
   version "1.2.0"

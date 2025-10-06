@@ -1,4 +1,3 @@
-import './App.css';
 import POC from './pages/POC';
 
 const App = () => {
