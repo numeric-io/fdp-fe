@@ -5,12 +5,15 @@ import './styles/globals.css';
 
 export const FDPApp = App;
 
-const rootEl = document.getElementById('root');
-if (rootEl) {
-  const root = ReactDOM.createRoot(rootEl);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-  );
+let rootEl: HTMLElement | null = document.getElementById('fdp-root');
+if (!rootEl) {
+  rootEl = document.createElement('div');
+  rootEl.id = 'fdp-root';
+  document.body.appendChild(rootEl);
 }
+const root = ReactDOM.createRoot(rootEl);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);

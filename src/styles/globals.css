@@ -1,9 +1,10 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
-@import "./ag-grid-global.css";
+@import './ag-grid-global.css';
 
-body, #root {
+body,
+#fdp-root {
   @apply h-screen;
 }
 
@@ -127,7 +128,7 @@ body, #root {
     @apply bg-background text-foreground;
   }
 
-  input[type="search"]::-webkit-search-cancel-button {
+  input[type='search']::-webkit-search-cancel-button {
     -webkit-appearance: none;
   }
 
