@@ -6,6 +6,11 @@ export default defineConfig({
     entry: {
       index: ['./src/**'],
     },
+    define: {
+      // Do not load the env variables into the bundle
+      'process.env.PUBLIC_AG_GRID_LICENSE':
+        'process.env.PUBLIC_AG_GRID_LICENSE',
+    },
   },
   lib: [
     {
