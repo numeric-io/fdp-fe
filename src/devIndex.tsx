@@ -12,6 +12,8 @@ if (!rootEl) {
 const root = ReactDOM.createRoot(rootEl);
 root.render(
   <React.StrictMode>
-    <App />
+    <div className="h-full p-4">
+      <App />
+    </div>
   </React.StrictMode>,
 );

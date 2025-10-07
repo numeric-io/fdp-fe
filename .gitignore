@@ -16,3 +16,4 @@ dist/
 .idea
 
 fdp-fe-*.tgz
+.env

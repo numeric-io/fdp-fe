@@ -5,6 +5,7 @@ import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
 import {
   AllCommunityModule,
   ClientSideRowModelModule,
+  LicenseManager,
   ModuleRegistry,
   RowDragModule,
   RowGroupingModule,
@@ -21,6 +22,7 @@ interface RateRulesGridContext {
   contractID: string;
 }
 
+LicenseManager.setLicenseKey(process.env.PUBLIC_AG_GRID_LICENSE);
 ModuleRegistry.registerModules([AllCommunityModule]);
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
