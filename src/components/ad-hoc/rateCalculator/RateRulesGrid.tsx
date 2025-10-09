@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button';
 import { useContract } from '@/lib/store/stores/rateCalculator/getters';
 import { useContractRateRulesBySKUID } from '@/lib/store/stores/rateCalculator/memoSelectors';
 import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
+import '@ag-grid-community/styles/ag-grid.css';
+import '@ag-grid-community/styles/ag-theme-quartz.css';
 import {
   AllCommunityModule,
   ClientSideRowModelModule,
@@ -80,46 +82,49 @@ export const RateRulesGrid = ({
   };
 
   return (
-    <AgGridReact
-      columnDefs={colDefs}
-      rowData={rateRules}
-      rowDragManaged={true}
-      gridOptions={{
-        suppressMoveWhenRowDragging: true,
-      }}
-      className="rate-rules-grid"
-      defaultColDef={{
-        // We don't want to sort the rows because the order of the rows
-        // determines which rule takes precedence when running rate calculation
-        sortable: false,
-      }}
-      autoGroupColumnDef={
-        showGrouping
-          ? {
-              headerName: 'SKU',
-              minWidth: 300,
-              width: 300,
-              headerClass: 'h-full',
-              pinned: 'left',
-              cellRendererParams: {
-                // Suppress default count because we are showing the count in the SKUGroupCellRenderer
-                suppressCount: true,
-              },
-            }
-          : undefined
-      }
-      context={context}
-      onRowDragEnd={(event) => {
-        const newRuleIDs: string[] = [];
-        event.api.forEachNode((node) => {
-          const rowID = node.data?.id;
-          if (!rowID) return;
-          newRuleIDs.push(rowID);
-        });
+    <div className="ag-theme-quartz h-full">
+      <AgGridReact
+        theme={'legacy'}
+        columnDefs={colDefs}
+        rowData={rateRules}
+        rowDragManaged={true}
+        gridOptions={{
+          suppressMoveWhenRowDragging: true,
+        }}
+        className="rate-rules-grid"
+        defaultColDef={{
+          // We don't want to sort the rows because the order of the rows
+          // determines which rule takes precedence when running rate calculation
+          sortable: false,
+        }}
+        autoGroupColumnDef={
+          showGrouping
+            ? {
+                headerName: 'SKU',
+                minWidth: 300,
+                width: 300,
+                headerClass: 'h-full',
+                pinned: 'left',
+                cellRendererParams: {
+                  // Suppress default count because we are showing the count in the SKUGroupCellRenderer
+                  suppressCount: true,
+                },
+              }
+            : undefined
+        }
+        context={context}
+        onRowDragEnd={(event) => {
+          const newRuleIDs: string[] = [];
+          event.api.forEachNode((node) => {
+            const rowID = node.data?.id;
+            if (!rowID) return;
+            newRuleIDs.push(rowID);
+          });
 
-        console.log(newRuleIDs);
-      }}
-    />
+          console.log(newRuleIDs);
+        }}
+      />
+    </div>
   );
 };
 
