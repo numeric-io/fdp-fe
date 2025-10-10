@@ -21,8 +21,8 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
 
   const colDefs = useMemo<ColDef<Events>[]>(
     () => [
-      { field: 'id', headerName: 'ID' },
-      { field: 'name', headerName: 'Name', flex: 1 },
+      { field: 'billing_record_eid', headerName: 'ID' },
+      { field: 'content', headerName: 'Content', flex: 1 },
     ],
     [],
   );

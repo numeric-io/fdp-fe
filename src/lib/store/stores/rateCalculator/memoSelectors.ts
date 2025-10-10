@@ -8,20 +8,32 @@ export const useEventsByContractID = (contractID: string | null): Events[] => {
     if (contractID === null) {
       return events;
     }
-    return events.filter((event) => event.contractID === contractID);
+    return events.filter((event) => event.contract_id === contractID);
   }, [events, contractID]);
+};
+
+export const useContractRateRulesByContractID = (
+  contractID: string,
+): ContractRateRule[] => {
+  const rateRules = useContractRateRules();
+  return useMemo(() => {
+    return rateRules.filter((rule) => rule.contract_id === contractID);
+  }, [rateRules, contractID]);
 };
 
 export const useContractRateRulesBySKUID = (
   contractID: string,
   skuID: string | null,
 ): ContractRateRule[] => {
-  const rateRules = useContractRateRules(contractID);
+  const rateRules = useContractRateRules();
 
   return useMemo(() => {
+    const contractRateRules = rateRules.filter(
+      (rule) => rule.contract_id === contractID,
+    );
     if (skuID === null) {
-      return rateRules;
+      return contractRateRules;
     }
-    return rateRules.filter((rule) => rule.skuID === skuID) ?? [];
-  }, [rateRules, skuID]);
+    return contractRateRules.filter((rule) => rule.sku.id === skuID);
+  }, [rateRules, skuID, contractID]);
 };

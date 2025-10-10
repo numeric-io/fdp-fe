@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { useContract } from '@/lib/store/stores/rateCalculator/getters';
 import { useContractRateRulesBySKUID } from '@/lib/store/stores/rateCalculator/memoSelectors';
 import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
 import '@ag-grid-community/styles/ag-grid.css';
@@ -31,7 +30,7 @@ export const RateRulesGrid = ({
   const colDefs = useMemo<ColDef<ContractRateRule>[]>(
     () => [
       {
-        field: 'skuID',
+        field: 'sku.id',
         headerName: 'SKU',
         rowDrag: true,
         rowGroup: showGrouping,
@@ -49,8 +48,6 @@ export const RateRulesGrid = ({
           : undefined,
       },
       { field: 'id', headerName: 'ID' },
-      { field: 'name', headerName: 'Name', flex: 1 },
-      { field: 'currency', headerName: 'Currency' },
       { field: 'rate', headerName: 'Rate' },
     ],
     [showGrouping, setSelectedSKUID],
@@ -108,23 +105,20 @@ export const RateRulesGrid = ({
 };
 
 interface SKUGroupCellRendererArgs {
-  params: ICellRendererParams<unknown, string, RateRulesGridContext>;
+  params: ICellRendererParams<ContractRateRule, string, RateRulesGridContext>;
   setSelectedSKUID: (skuID: string) => void;
 }
 
 const SKUGroupCellRenderer = (args: SKUGroupCellRendererArgs) => {
   const { params, setSelectedSKUID } = args;
-  const selectedContractID = params.context?.contractID;
+  const SKU = params.data?.sku;
   const skuID = params.value;
-  const contract = useContract(selectedContractID ?? '');
   const leafCount = params.node?.allLeafChildren?.length;
 
   return (
     <div className="flex items-center gap-2 h-full">
       <div className="text-sm flex-1 flex gap-1 min-w-0">
-        <span className="truncate">
-          {contract?.skus.find((sku) => sku.id === skuID)?.name}
-        </span>
+        <span className="truncate">{SKU?.name}</span>
         {leafCount && <span>{`(${leafCount})`}</span>}
       </div>
       <Button

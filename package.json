@@ -19,11 +19,13 @@
     "format": "prettier --write .",
     "lint": "eslint .",
     "preview": "rsbuild preview",
-    "add-shadcn": "npx shadcn@latest add  --path src/components/ui "
+    "add-shadcn": "npx shadcn@latest add  --path src/components/ui",
+    "typecheck": "yarn tsc --noEmit --watch",
+    "up-numeric": "yarn up --exact @numeric-io/fdp-api"
   },
   "dependencies": {
     "@ag-grid-community/styles": "^32.3.9",
-    "@numeric-io/fdp-api": "0.0.8",
+    "@numeric-io/fdp-api": "0.0.14",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.3",

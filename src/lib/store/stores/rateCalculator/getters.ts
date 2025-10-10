@@ -19,11 +19,6 @@ export const getContract = (
   ) ?? null;
 export const useContract = createSelector(getContract);
 
-export const getContractRateRules = (
-  store: Store,
-  contractID: string,
-): ContractRateRule[] =>
-  store.rateCalculatorStore.contracts.find(
-    (contract) => contract.id === contractID,
-  )?.rateRules ?? [];
+export const getContractRateRules = (store: Store): ContractRateRule[] =>
+  store.rateCalculatorStore.rules;
 export const useContractRateRules = createSelector(getContractRateRules);

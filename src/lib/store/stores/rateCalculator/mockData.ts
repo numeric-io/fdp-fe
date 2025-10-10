@@ -1,3 +1,4 @@
+import { Temporal } from '@numeric-io/temporal';
 import {
   Operator,
   type Contract,
@@ -5,12 +6,11 @@ import {
   type Events,
 } from './types';
 
-const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
+export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_consumer_new_origination',
-    name: 'CLA Consumer New Origination',
-    contractID: 'rco_built',
-    skuID: 'CLA',
+    contract_id: 'rco_built',
+    sku: { id: 'CLA', name: 'CLA' },
     rule: {
       op: Operator.And,
       conditions: [
@@ -27,15 +27,12 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
         },
       ],
     },
-    rate: 693.0,
-    currency: 'USD',
+    rate: '693.0',
     priority: 1,
   },
   {
     id: 'cla_consumer_general',
-    name: 'CLA Consumer General',
-    contractID: 'rco_built',
-    skuID: 'CLA',
+    contract_id: 'rco_built',
     rule: {
       op: Operator.And,
       conditions: [
@@ -47,15 +44,13 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
         { op: Operator.Equal, field: '.AGREEMENT_TYPE', value: 'CONSUMER' },
       ],
     },
-    rate: 650.0,
-    currency: 'USD',
+    rate: '650.0',
     priority: 1.5,
+    sku: { id: 'CLA', name: 'CLA' },
   },
   {
     id: 'cla_commercial_general',
-    name: 'CLA Commercial General',
-    contractID: 'rco_built',
-    skuID: 'CLA',
+    contract_id: 'rco_built',
     rule: {
       op: Operator.And,
       conditions: [
@@ -67,15 +62,14 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
         { op: Operator.Equal, field: '.AGREEMENT_TYPE', value: 'CRE' },
       ],
     },
-    rate: 1000.0,
-    currency: 'USD',
+    rate: '1000.0',
     priority: 2,
+    sku: { id: 'CLA', name: 'CLA' },
   },
   {
     id: 'cla_ignore_non_upfront',
-    name: 'CLA Ignore Non Upfront',
-    contractID: 'rco_built',
-    skuID: 'CLA',
+    contract_id: 'rco_built',
+    sku: { id: 'CLA', name: 'CLA' },
     rule: {
       op: Operator.And,
       conditions: [
@@ -86,15 +80,13 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
         },
       ],
     },
-    rate: 0.0,
-    currency: 'USD',
+    rate: '0.0',
     priority: 2.5,
   },
   {
     id: 'inspector_onsite_transactional',
-    name: 'Inspector Onsite Transactional',
-    contractID: 'rco_built',
-    skuID: 'inspector_onsite',
+    contract_id: 'rco_built',
+    sku: { id: 'inspector_onsite', name: 'Inspector Onsite' },
     rule: {
       op: Operator.And,
       conditions: [
@@ -105,8 +97,7 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
         },
       ],
     },
-    rate: 0.0,
-    currency: 'USD',
+    rate: '0.0',
     priority: 3,
   },
 ];
@@ -114,23 +105,36 @@ const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
 export const SAMPLE_CONTRACTS: Contract[] = [
   {
     id: 'rco_built',
-    name: 'RCO Built',
-    rateRules: [...SAMPLE_CONTRACT_RATE_RULES],
-    skus: [
-      { id: 'CLA', name: 'CLA' },
-      { id: 'inspector_onsite', name: 'Inspector Onsite' },
-    ],
+    signed_date: Temporal.PlainDate.from('2025-01-01'),
+    customer_name: 'RCO Built',
   },
   {
     id: 'sample_contract',
-    name: 'Sample Contract',
-    rateRules: [],
-    skus: [],
+    signed_date: Temporal.PlainDate.from('2025-08-01'),
+    customer_name: 'Sample Contract',
   },
 ];
 
 export const SAMPLE_UNMATCHED_EVENTS: Events[] = [
-  { id: '1', name: 'Event 1', contractID: 'rco_built' },
-  { id: '2', name: 'Event 2', contractID: 'rco_built' },
-  { id: '3', name: 'Event 3', contractID: 'rco_built' },
+  {
+    billing_record_eid: '1',
+    content: {},
+    rule_id: 'rco_built',
+    rate: '0.0',
+    contract_id: 'rco_built',
+  },
+  {
+    billing_record_eid: '2',
+    content: {},
+    rule_id: 'rco_built',
+    rate: '0.0',
+    contract_id: 'rco_built',
+  },
+  {
+    billing_record_eid: '3',
+    content: {},
+    rule_id: 'rco_built',
+    rate: '0.0',
+    contract_id: 'rco_built',
+  },
 ];

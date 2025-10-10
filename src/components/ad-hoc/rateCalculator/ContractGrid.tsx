@@ -29,7 +29,7 @@ export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
         headerName: 'ID',
       },
       {
-        field: 'name',
+        field: 'customer_name',
         headerName: 'Name',
         flex: 1,
       },
