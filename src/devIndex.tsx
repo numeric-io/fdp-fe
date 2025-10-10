@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { APIClient } from './api-client/api-client';
 import App, { APIClientContext } from './App';
 import './styles/globals.css';
@@ -26,8 +27,10 @@ if (!rootEl) {
 const root = ReactDOM.createRoot(rootEl);
 root.render(
   <React.StrictMode>
-    <div className="h-full p-4">
-      <DevApp />
-    </div>
+    <BrowserRouter>
+      <div className="h-full p-4">
+        <DevApp />
+      </div>
+    </BrowserRouter>
   </React.StrictMode>,
 );

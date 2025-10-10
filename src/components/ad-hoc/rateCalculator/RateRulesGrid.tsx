@@ -4,18 +4,7 @@ import { useContractRateRulesBySKUID } from '@/lib/store/stores/rateCalculator/m
 import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
 import '@ag-grid-community/styles/ag-grid.css';
 import '@ag-grid-community/styles/ag-theme-quartz.css';
-import {
-  AllCommunityModule,
-  ClientSideRowModelModule,
-  LicenseManager,
-  ModuleRegistry,
-  RowDragModule,
-  RowGroupingModule,
-  RowGroupingPanelModule,
-  ValidationModule,
-  type ColDef,
-  type ICellRendererParams,
-} from 'ag-grid-enterprise';
+import { type ColDef, type ICellRendererParams } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo } from 'react';
 import './RateRulesGrid.css';
@@ -23,16 +12,6 @@ import './RateRulesGrid.css';
 interface RateRulesGridContext {
   contractID: string;
 }
-
-LicenseManager.setLicenseKey(process.env.PUBLIC_AG_GRID_LICENSE);
-ModuleRegistry.registerModules([AllCommunityModule]);
-ModuleRegistry.registerModules([
-  ClientSideRowModelModule,
-  RowGroupingModule,
-  RowGroupingPanelModule,
-  RowDragModule,
-  ...(process.env.NODE_ENV !== 'production' ? [ValidationModule] : []),
-]);
 
 export interface RateRulesGridProps {
   contractID: string;
