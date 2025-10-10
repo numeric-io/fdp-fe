@@ -1,8 +1,6 @@
 import { BreadcrumbNav } from '@/components/ad-hoc/BreadcrumbNav';
-import { ContractGrid } from '@/components/ad-hoc/rateCalculator/ContractGrid';
 import { LocationType } from '@/lib/routing/types';
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation';
-import { useNavigateTo } from '@/lib/routing/useNavigateTo';
 import {
   AllCommunityModule,
   ClientSideRowModelModule,
@@ -13,6 +11,7 @@ import {
   RowGroupingPanelModule,
   ValidationModule,
 } from 'ag-grid-enterprise';
+import { ContractsPage } from './ContractsPage';
 import { RulesPage } from './RulesPage';
 
 LicenseManager.setLicenseKey(process.env.PUBLIC_AG_GRID_LICENSE);
@@ -27,7 +26,6 @@ ModuleRegistry.registerModules([
 
 export const POC = () => {
   const location = useCurrentLocation();
-  const navigateTo = useNavigateTo();
 
   return (
     <div className="h-full gap-2 flex flex-col">
@@ -36,11 +34,7 @@ export const POC = () => {
       </div>
       <div className="flex-1">
         {location.type === LocationType.ContractList ? (
-          <ContractGrid
-            onSelectContract={(contractID) => {
-              navigateTo({ type: LocationType.RuleList, contractID });
-            }}
-          />
+          <ContractsPage />
         ) : (
           <RulesPage />
         )}

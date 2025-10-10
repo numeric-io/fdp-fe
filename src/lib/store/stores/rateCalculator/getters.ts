@@ -1,10 +1,10 @@
 import { createSelector } from '../../createSelector';
 import type { Store } from '../../types';
-import type { Contract, ContractRateRule, UnmatchedEvent } from './types';
+import type { Contract, ContractRateRule, Events } from './types';
 
-export const getUnmatchedEvents = (store: Store): UnmatchedEvent[] =>
-  store.rateCalculatorStore.unmatchedEvents;
-export const useUnmatchedEvents = createSelector(getUnmatchedEvents);
+export const getEvents = (store: Store): Events[] =>
+  store.rateCalculatorStore.events;
+export const useEvents = createSelector(getEvents);
 
 export const getContracts = (store: Store): Contract[] =>
   store.rateCalculatorStore.contracts;

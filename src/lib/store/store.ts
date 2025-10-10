@@ -8,7 +8,7 @@ import type { Store } from './types';
 export const useGlobalStore = create<Store>(() => ({
   rateCalculatorStore: {
     // TODO: Remove mock data
-    unmatchedEvents: SAMPLE_UNMATCHED_EVENTS,
+    events: SAMPLE_UNMATCHED_EVENTS,
     contracts: SAMPLE_CONTRACTS,
   },
 }));

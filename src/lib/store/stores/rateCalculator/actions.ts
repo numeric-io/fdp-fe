@@ -1,12 +1,12 @@
 import { produce } from 'immer';
 import { useGlobalStore } from '../../store';
 import type { Store } from '../../types';
-import type { UnmatchedEvent } from './types';
+import type { Events } from './types';
 
-export const updateUnmatchedEvents = (events: UnmatchedEvent[]) => {
+export const updateEvents = (events: Events[]) => {
   useGlobalStore.setState((store: Store) => {
     return produce(store, (draft) => {
-      draft.rateCalculatorStore.unmatchedEvents = events;
+      draft.rateCalculatorStore.events = events;
     });
   });
 };

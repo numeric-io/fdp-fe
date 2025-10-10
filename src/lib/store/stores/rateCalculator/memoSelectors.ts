@@ -1,29 +1,15 @@
-import { partition } from '@/lib/utils';
 import { useMemo } from 'react';
-import {
-  useContractRateRules,
-  useContracts,
-  useUnmatchedEvents,
-} from './getters';
-import type { Contract, ContractRateRule } from './types';
+import { useContractRateRules, useEvents } from './getters';
+import type { ContractRateRule, Events } from './types';
 
-export const useContractGroupedByUnmatchedEvents = (): {
-  contractsWithUnmatchedEvents: Contract[];
-  contractsWithoutUnmatchedEvents: Contract[];
-} => {
-  const unmatchedEvents = useUnmatchedEvents();
-  const contracts = useContracts();
-
+export const useEventsByContractID = (contractID: string | null): Events[] => {
+  const events = useEvents();
   return useMemo(() => {
-    const unmatchedEventContractIDs = new Set(
-      unmatchedEvents.map((event) => event.contractID),
-    );
-    const [contractsWithUnmatchedEvents, contractsWithoutUnmatchedEvents] =
-      partition(contracts, (contract) =>
-        unmatchedEventContractIDs.has(contract.id),
-      );
-    return { contractsWithUnmatchedEvents, contractsWithoutUnmatchedEvents };
-  }, [unmatchedEvents, contracts]);
+    if (contractID === null) {
+      return events;
+    }
+    return events.filter((event) => event.contractID === contractID);
+  }, [events, contractID]);
 };
 
 export const useContractRateRulesBySKUID = (

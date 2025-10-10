@@ -1,13 +1,13 @@
+import EventsGrid from '@/components/ad-hoc/EventsGrid';
 import { RateRulesGrid } from '@/components/ad-hoc/rateCalculator/RateRulesGrid';
-import UnmatchedEvents from '@/components/ad-hoc/UnmatchedEvents';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LocationType } from '@/lib/routing/types';
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation';
 import { useNavigateTo } from '@/lib/routing/useNavigateTo';
 
-enum TabValue {
-  RateCalculator = 'rate_calculator',
-  UnmatchedEvents = 'unmatched_events',
+enum RulesPageTab {
+  Rules = 'rules',
+  Events = 'events',
 }
 
 export const RulesPage = () => {
@@ -31,17 +31,13 @@ export const RulesPage = () => {
 
   const { contractID } = location;
   return (
-    <Tabs defaultValue={TabValue.RateCalculator} className="h-full">
+    <Tabs defaultValue={RulesPageTab.Rules} className="h-full">
       <TabsList>
-        <TabsTrigger value={TabValue.RateCalculator}>
-          Rate Calculator
-        </TabsTrigger>
-        <TabsTrigger value={TabValue.UnmatchedEvents}>
-          Unmatched Events
-        </TabsTrigger>
+        <TabsTrigger value={RulesPageTab.Rules}>Rules</TabsTrigger>
+        <TabsTrigger value={RulesPageTab.Events}>Events</TabsTrigger>
       </TabsList>
 
-      <TabsContent value={TabValue.RateCalculator}>
+      <TabsContent value={RulesPageTab.Rules}>
         {location.type === LocationType.RuleList ? (
           <RateRulesGrid
             contractID={contractID}
@@ -56,8 +52,8 @@ export const RulesPage = () => {
           />
         )}
       </TabsContent>
-      <TabsContent value={TabValue.UnmatchedEvents}>
-        <UnmatchedEvents />
+      <TabsContent value={RulesPageTab.Events}>
+        <EventsGrid contractID={contractID} />
       </TabsContent>
     </Tabs>
   );

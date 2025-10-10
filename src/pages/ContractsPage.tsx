@@ -1,0 +1,33 @@
+import EventsGrid from '@/components/ad-hoc/EventsGrid';
+import { ContractGrid } from '@/components/ad-hoc/rateCalculator/ContractGrid';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LocationType } from '@/lib/routing/types';
+import { useNavigateTo } from '@/lib/routing/useNavigateTo';
+
+enum ContractsPageTab {
+  Contracts = 'contracts',
+  Events = 'events',
+}
+
+export const ContractsPage = () => {
+  const navigateTo = useNavigateTo();
+  return (
+    <Tabs defaultValue={ContractsPageTab.Contracts} className="h-full">
+      <TabsList>
+        <TabsTrigger value={ContractsPageTab.Contracts}>Contracts</TabsTrigger>
+        <TabsTrigger value={ContractsPageTab.Events}>Events</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value={ContractsPageTab.Contracts}>
+        <ContractGrid
+          onSelectContract={(contractID) => {
+            navigateTo({ type: LocationType.RuleList, contractID });
+          }}
+        />
+      </TabsContent>
+      <TabsContent value={ContractsPageTab.Events}>
+        <EventsGrid contractID={null} />
+      </TabsContent>
+    </Tabs>
+  );
+};

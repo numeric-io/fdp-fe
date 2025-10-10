@@ -2,7 +2,7 @@ import {
   Operator,
   type Contract,
   type ContractRateRule,
-  type UnmatchedEvent,
+  type Events,
 } from './types';
 
 const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
@@ -129,7 +129,7 @@ export const SAMPLE_CONTRACTS: Contract[] = [
   },
 ];
 
-export const SAMPLE_UNMATCHED_EVENTS: UnmatchedEvent[] = [
+export const SAMPLE_UNMATCHED_EVENTS: Events[] = [
   { id: '1', name: 'Event 1', contractID: 'rco_built' },
   { id: '2', name: 'Event 2', contractID: 'rco_built' },
   { id: '3', name: 'Event 3', contractID: 'rco_built' },

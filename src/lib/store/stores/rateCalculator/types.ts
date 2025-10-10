@@ -1,4 +1,4 @@
-export interface UnmatchedEvent {
+export interface Events {
   id: string;
   name: string;
   contractID: string;
@@ -17,7 +17,7 @@ export interface Contract {
 }
 
 export interface RateCalculatorStore {
-  unmatchedEvents: UnmatchedEvent[];
+  events: Events[];
   contracts: Contract[];
 }
 
