@@ -1,21 +1,30 @@
+import { APIRoute, ValidSpec } from '@numeric-io/fdp-api';
 import axios from 'axios';
+import { IBackendAPIClient } from './IBackendAPIClient';
 
 export interface RequestOptions {
   method?: string;
   body?: unknown;
 }
 
-export class APIClient {
+export class APIClient implements IBackendAPIClient {
   private baseUrl: string;
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
   }
-  request = async (path: string, options?: RequestOptions) => {
-    const { method = 'GET', body } = options || {};
+  request = async <
+    Req extends ValidSpec | undefined,
+    Resp extends ValidSpec,
+    Fail extends ValidSpec | undefined,
+  >(
+    spec: APIRoute<Req, Resp, Fail>,
+    requestBody: Req,
+  ) => {
+    const { method } = spec;
     const response = await axios.request({
-      url: `${this.baseUrl}${path}`,
+      url: `${this.baseUrl}${spec.path}`,
       method,
-      data: body,
+      data: requestBody,
     });
     return response.data;
   };

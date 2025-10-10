@@ -1,7 +1,10 @@
+import { createContext } from 'react';
+import { IBackendAPIClient } from './api-client/IBackendAPIClient';
 import POC from './pages/POC';
 
+export const APIClientContext = createContext<IBackendAPIClient | null>(null);
+
 const App = () => {
-  // const apiClient = useMemo(() => new APIClient('http://localhost:3005'), []);
   return <POC />;
 };
 
