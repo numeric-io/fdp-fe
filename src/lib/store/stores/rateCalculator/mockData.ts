@@ -10,7 +10,7 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_consumer_new_origination',
     contract_id: 'rco_built',
-    sku: { id: 'CLA', name: 'CLA' },
+    sku: { id: 'cla', name: 'CLA' },
     rule: {
       op: Operator.And,
       conditions: [
@@ -46,7 +46,7 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
     },
     rate: '650.0',
     priority: 1.5,
-    sku: { id: 'CLA', name: 'CLA' },
+    sku: { id: 'cla', name: 'CLA' },
   },
   {
     id: 'cla_commercial_general',
@@ -64,12 +64,12 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
     },
     rate: '1000.0',
     priority: 2,
-    sku: { id: 'CLA', name: 'CLA' },
+    sku: { id: 'cla', name: 'CLA' },
   },
   {
     id: 'cla_ignore_non_upfront',
     contract_id: 'rco_built',
-    sku: { id: 'CLA', name: 'CLA' },
+    sku: { id: 'cla', name: 'CLA' },
     rule: {
       op: Operator.And,
       conditions: [

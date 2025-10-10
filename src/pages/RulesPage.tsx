@@ -3,7 +3,6 @@ import { RateRulesGrid } from '@/components/ad-hoc/rateCalculator/RateRulesGrid'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LocationType } from '@/lib/routing/types';
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation';
-import { useNavigateTo } from '@/lib/routing/useNavigateTo';
 
 enum RulesPageTab {
   Rules = 'rules',
@@ -12,7 +11,6 @@ enum RulesPageTab {
 
 export const RulesPage = () => {
   const location = useCurrentLocation();
-  const navigateTo = useNavigateTo();
 
   if (
     location.type !== LocationType.RuleList &&
@@ -20,14 +18,6 @@ export const RulesPage = () => {
   ) {
     return null;
   }
-
-  const onSelectSKUID = (skuID: string | null) => {
-    navigateTo({
-      type: LocationType.RuleEditor,
-      contractID: location.contractID,
-      SKUID: skuID,
-    });
-  };
 
   const { contractID } = location;
   return (
@@ -39,17 +29,9 @@ export const RulesPage = () => {
 
       <TabsContent value={RulesPageTab.Rules}>
         {location.type === LocationType.RuleList ? (
-          <RateRulesGrid
-            contractID={contractID}
-            skuID={null}
-            setSelectedSKUID={onSelectSKUID}
-          />
+          <RateRulesGrid contractID={contractID} />
         ) : (
-          <RateRulesGrid
-            contractID={contractID}
-            skuID={location.SKUID}
-            setSelectedSKUID={() => {}}
-          />
+          <RateRulesGrid contractID={contractID} />
         )}
       </TabsContent>
       <TabsContent value={RulesPageTab.Events}>

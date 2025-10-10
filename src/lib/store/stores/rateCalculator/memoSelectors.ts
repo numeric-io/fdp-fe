@@ -25,15 +25,12 @@ export const useContractRateRulesBySKUID = (
   contractID: string,
   skuID: string | null,
 ): ContractRateRule[] => {
-  const rateRules = useContractRateRules();
+  const rateRules = useContractRateRulesByContractID(contractID);
 
   return useMemo(() => {
-    const contractRateRules = rateRules.filter(
-      (rule) => rule.contract_id === contractID,
-    );
     if (skuID === null) {
-      return contractRateRules;
+      return rateRules;
     }
-    return contractRateRules.filter((rule) => rule.sku.id === skuID);
-  }, [rateRules, skuID, contractID]);
+    return rateRules.filter((rule) => rule.sku.id === skuID);
+  }, [rateRules, skuID]);
 };

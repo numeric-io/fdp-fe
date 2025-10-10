@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   BASE_PATH,
@@ -11,9 +12,12 @@ import {
 export const useNavigateTo = (): ((location: Location) => void) => {
   const navigate = useNavigate();
 
-  return (location: Location) => {
-    navigate(locationToPath(location));
-  };
+  return useCallback(
+    (location: Location) => {
+      navigate(locationToPath(location));
+    },
+    [navigate],
+  );
 };
 
 export const locationToPath = (location: Location) => {
