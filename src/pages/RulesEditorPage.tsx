@@ -1,5 +1,5 @@
 import { EventsGrid } from '@/components/ad-hoc/rateCalculator/EventsGrid';
-import { RulesEditor } from '@/components/ad-hoc/rateCalculator/ruleEditor/RulesEditor';
+import { RulesEditor } from '@/components/ad-hoc/rateCalculator/rulesEditor/RulesEditor';
 import { LocationType } from '@/lib/routing/types';
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation';
 import { useNavigateTo } from '@/lib/routing/useNavigateTo';

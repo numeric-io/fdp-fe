@@ -45,7 +45,7 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
       ],
     },
     rate: '650.0',
-    priority: 1.5,
+    priority: 2,
     sku: { id: 'cla', name: 'CLA' },
   },
   {
@@ -63,7 +63,7 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
       ],
     },
     rate: '1000.0',
-    priority: 2,
+    priority: 3,
     sku: { id: 'cla', name: 'CLA' },
   },
   {
@@ -81,7 +81,7 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
       ],
     },
     rate: '0.0',
-    priority: 2.5,
+    priority: 4,
   },
   {
     id: 'inspector_onsite_transactional',
@@ -98,7 +98,7 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
       ],
     },
     rate: '0.0',
-    priority: 3,
+    priority: 1,
   },
 ];
 

@@ -1,0 +1,35 @@
+.rules-editor-grid .ag-header {
+  display: none;
+}
+
+.rules-editor-grid .ag-icon-grip:before {
+  background: none !important;
+}
+
+.ag-dnd-ghost-icon {
+  /* Hide the drag icon in the preview because its styling is off */
+  display: none;
+}
+
+.rules-editor-grid-header .ag-cell-wrapper {
+  @apply h-full;
+}
+
+.rules-editor-grid-header {
+  .ag-drag-handle {
+    visibility: hidden;
+  }
+
+  .rule-header-priority {
+    visibility: visible;
+  }
+}
+.rules-editor-grid-header:hover {
+  .ag-drag-handle {
+    visibility: visible;
+  }
+
+  .rule-header-priority {
+    visibility: hidden;
+  }
+}
