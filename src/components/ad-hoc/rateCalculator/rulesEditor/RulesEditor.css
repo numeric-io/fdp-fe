@@ -14,7 +14,7 @@
 .rules-editor-grid-header .ag-cell-wrapper {
   @apply h-full;
 }
-
+/* 
 .rules-editor-grid-header {
   .ag-drag-handle {
     visibility: hidden;
@@ -32,4 +32,4 @@
   .rule-header-priority {
     visibility: hidden;
   }
-}
+} */
