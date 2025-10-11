@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useContractRateRules, useEvents } from './getters';
-import type { ContractRateRule, Events } from './types';
+import { useContract, useContractRateRules, useEvents } from './getters';
+import type { ContractRateRule, Events, SKU } from './types';
 
 export const useEventsByContractID = (contractID: string | null): Events[] => {
   const events = useEvents();
@@ -10,6 +10,23 @@ export const useEventsByContractID = (contractID: string | null): Events[] => {
     }
     return events.filter((event) => event.contract_id === contractID);
   }, [events, contractID]);
+};
+
+export const useSKUsByContractID = (contractID: string): SKU[] => {
+  const contract = useContract(contractID);
+  return useMemo(() => {
+    return contract?.skus ?? [];
+  }, [contract]);
+};
+
+export const useSKUByID = (
+  contractID: string,
+  skuID: string | null,
+): SKU | null => {
+  const contract = useSKUsByContractID(contractID);
+  return useMemo(() => {
+    return contract.find((sku) => sku.id === skuID) ?? null;
+  }, [contract, skuID]);
 };
 
 export const useContractRateRulesByContractID = (

@@ -107,11 +107,16 @@ export const SAMPLE_CONTRACTS: Contract[] = [
     id: 'rco_built',
     signed_date: Temporal.PlainDate.from('2025-01-01'),
     customer_name: 'RCO Built',
+    skus: [
+      { id: 'cla', name: 'CLA' },
+      { id: 'inspector_onsite', name: 'Inspector Onsite' },
+    ],
   },
   {
     id: 'sample_contract',
     signed_date: Temporal.PlainDate.from('2025-08-01'),
     customer_name: 'Sample Contract',
+    skus: [],
   },
 ];
 

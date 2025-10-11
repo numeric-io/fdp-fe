@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { LocationType } from '@/lib/routing/types';
 import { useNavigateTo } from '@/lib/routing/useNavigateTo';
+import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters';
 import { useContractRateRulesByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors';
 import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
 import '@ag-grid-community/styles/ag-grid.css';
@@ -27,6 +28,7 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
         field: 'sku.id',
         headerName: 'SKU',
         rowGroup: true,
+        cellRenderer: SKUCellRenderer,
       },
       { field: 'rate', headerName: 'Rate' },
       { colId: 'actions', headerName: '', cellRenderer: ActionsCellRenderer },
@@ -52,12 +54,8 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
         }}
         groupDisplayType="groupRows"
         groupDefaultExpanded={-1}
-        autoGroupColumnDef={{
-          headerName: 'SKU',
-          minWidth: 300,
-          width: 300,
-          headerClass: 'h-full',
-          pinned: 'left',
+        groupRowRendererParams={{
+          innerRenderer: SKUCellRenderer,
         }}
         context={context}
       />
@@ -88,4 +86,11 @@ const ActionsCellRenderer = (
       Edit
     </Button>
   );
+};
+
+const SKUCellRenderer = (
+  params: ICellRendererParams<unknown, string, RateRulesGridContext>,
+) => {
+  const sku = useSKUByID(params.context?.contractID, params.value ?? null);
+  return <div>{sku?.name ?? params.value}</div>;
 };
