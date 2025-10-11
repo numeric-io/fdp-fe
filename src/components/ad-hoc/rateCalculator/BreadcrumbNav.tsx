@@ -8,7 +8,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '../ui/breadcrumb';
+} from '../../ui/breadcrumb';
 
 export const BreadcrumbNav = () => {
   const location = useCurrentLocation();
@@ -23,7 +23,7 @@ export const BreadcrumbNav = () => {
             <BreadcrumbLink
               href={locationToPath({ type: LocationType.ContractList })}
             >
-              Billing & Revenue
+              {'Billing & Revenue'}
             </BreadcrumbLink>
           )}
         </BreadcrumbItem>
@@ -51,7 +51,7 @@ export const BreadcrumbNav = () => {
           <>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{location.SKUID}</BreadcrumbPage>
+              <BreadcrumbPage>{`Edit Rules`}</BreadcrumbPage>
             </BreadcrumbItem>
           </>
         )}

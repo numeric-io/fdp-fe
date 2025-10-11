@@ -1,4 +1,4 @@
-import EventsGrid from '@/components/ad-hoc/EventsGrid';
+import EventsGrid from '@/components/ad-hoc/rateCalculator/EventsGrid';
 import { RateRulesGrid } from '@/components/ad-hoc/rateCalculator/RateRulesGrid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LocationType } from '@/lib/routing/types';
@@ -11,15 +11,8 @@ enum RulesPageTab {
 
 export const RulesPage = () => {
   const location = useCurrentLocation();
+  if (location.type !== LocationType.RuleList) return null;
 
-  if (
-    location.type !== LocationType.RuleList &&
-    location.type !== LocationType.RuleEditor
-  ) {
-    return null;
-  }
-
-  const { contractID } = location;
   return (
     <Tabs defaultValue={RulesPageTab.Rules} className="h-full">
       <TabsList>
@@ -28,14 +21,10 @@ export const RulesPage = () => {
       </TabsList>
 
       <TabsContent value={RulesPageTab.Rules}>
-        {location.type === LocationType.RuleList ? (
-          <RateRulesGrid contractID={contractID} />
-        ) : (
-          <RateRulesGrid contractID={contractID} />
-        )}
+        <RateRulesGrid contractID={location.contractID} />
       </TabsContent>
       <TabsContent value={RulesPageTab.Events}>
-        <EventsGrid contractID={contractID} />
+        <EventsGrid contractID={location.contractID} />
       </TabsContent>
     </Tabs>
   );

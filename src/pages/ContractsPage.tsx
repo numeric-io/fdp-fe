@@ -1,5 +1,5 @@
-import EventsGrid from '@/components/ad-hoc/EventsGrid';
 import { ContractGrid } from '@/components/ad-hoc/rateCalculator/ContractGrid';
+import EventsGrid from '@/components/ad-hoc/rateCalculator/EventsGrid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LocationType } from '@/lib/routing/types';
 import { useNavigateTo } from '@/lib/routing/useNavigateTo';
