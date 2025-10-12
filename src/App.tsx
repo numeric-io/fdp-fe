@@ -2,6 +2,7 @@ import { GetContractsAPI } from '@numeric-io/fdp-api'
 import { createContext, useContext, useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { IBackendAPIClient } from './api-client/IBackendAPIClient'
+import { writeContracts } from './lib/store/stores/rateCalculator/write'
 import POC from './pages/POC'
 
 interface AppContextType {
@@ -19,7 +20,8 @@ const App = () => {
 
   async function fetchContracts() {
     const contractsRes = await client?.request(GetContractsAPI, undefined)
-    console.log(contractsRes)
+    if (!contractsRes) return console.error('No contracts found')
+    writeContracts(contractsRes.contracts)
   }
 
   useEffect(() => {
