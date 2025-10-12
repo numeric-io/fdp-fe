@@ -1,15 +1,19 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
-import { useState } from 'react';
 import { RuleHeader } from './RuleHeader';
+
+interface RuleEditorProps {
+  rule: ContractRateRule;
+  isExpanded: boolean;
+  onClick: () => void;
+}
 
 enum RuleBodyTab {
   Include = 'include',
   Exclude = 'exclude',
 }
 
-export const RuleEditor = ({ rule }: { rule: ContractRateRule }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+export const RuleEditor = ({ rule, isExpanded, onClick }: RuleEditorProps) => {
   const body = (
     <Tabs defaultValue={RuleBodyTab.Include} className="h-full w-full p-2">
       <TabsList>
@@ -29,7 +33,7 @@ export const RuleEditor = ({ rule }: { rule: ContractRateRule }) => {
           showPriority
           rule={rule}
           isExpanded={isExpanded}
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={onClick}
         />
       </div>
       {isExpanded && <div className="flex-1 w-full bg-gray-100">{body}</div>}

@@ -57,7 +57,12 @@ export const RulesEditor = ({
         {isReordering ? (
           <ReorderRulesGrid rules={editingRules} setRules={setEditingRules} />
         ) : (
-          <RulesList rules={editingRules} setRules={setEditingRules} />
+          <RulesList
+            contractID={contractID}
+            skuID={skuID}
+            rules={editingRules}
+            setRules={setEditingRules}
+          />
         )}
       </div>
     </div>
