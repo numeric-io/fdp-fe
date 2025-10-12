@@ -1,4 +1,5 @@
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
+import { RuleEditor } from './ruleEditor';
 
 interface RulesListProps {
   rules: ContractRateRule[];
@@ -6,5 +7,11 @@ interface RulesListProps {
 }
 
 export const RulesList = ({ rules, setRules }: RulesListProps) => {
-  return <div>RulesList</div>;
+  return (
+    <div className="h-full flex flex-col gap-2 overflow-auto">
+      {rules.map((rule) => (
+        <RuleEditor key={rule.id} rule={rule} />
+      ))}
+    </div>
+  );
 };

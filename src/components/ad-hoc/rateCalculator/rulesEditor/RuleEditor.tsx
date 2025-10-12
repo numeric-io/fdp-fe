@@ -1,43 +1,38 @@
-import { Text } from '@/components/ui/numeric-ui/text';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
-import { ICellRendererParams } from 'ag-grid-community';
-import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
+import { RuleHeader } from './RuleHeader';
 
-export const RuleHeaderRenderer = (
-  params: ICellRendererParams<ContractRateRule>,
-) => {
-  const rule = params.data;
-  if (!rule) {
-    return null;
-  }
+enum RuleBodyTab {
+  Include = 'include',
+  Exclude = 'exclude',
+}
+
+export const RuleEditor = ({ rule }: { rule: ContractRateRule }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const body = (
+    <Tabs defaultValue={RuleBodyTab.Include} className="h-full w-full p-2">
+      <TabsList>
+        <TabsTrigger value={RuleBodyTab.Include}>Include</TabsTrigger>
+        <TabsTrigger value={RuleBodyTab.Exclude}>Exclude</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value={RuleBodyTab.Include}></TabsContent>
+      <TabsContent value={RuleBodyTab.Exclude}></TabsContent>
+    </Tabs>
+  );
   return (
-    <div className="flex justify-between">
-      <div className="flex flex-col gap-1">
-        <Text>{`RuleHeader: ${rule.id}`}</Text>
-        <Text>{`No matches yet`}</Text>
+    <div className="flex flex-col gap-2">
+      {/* should match RULE_HEADER_HEIGHT but tailwind doesn't like dynamic classes */}
+      <div className={`h-[68px] px-4 flex items-center w-full`}>
+        <RuleHeader
+          showPriority
+          rule={rule}
+          isExpanded={isExpanded}
+          onClick={() => setIsExpanded(!isExpanded)}
+        />
       </div>
-      <ChevronDown className="opacity-50 text-gray-400" />
+      {isExpanded && <div className="flex-1 w-full bg-gray-100">{body}</div>}
     </div>
   );
 };
-
-// enum RuleBodyTab {
-//   Include = 'include',
-//   Exclude = 'exclude',
-// }
-
-// export const RuleEditorRenderer = ({ rule }: { rule: ContractRateRule }) => {
-//   return (
-//     <div className="h-md">
-//       <Tabs defaultValue={RuleBodyTab.Include} className="h-full">
-//         <TabsList>
-//           <TabsTrigger value={RuleBodyTab.Include}>Include</TabsTrigger>
-//           <TabsTrigger value={RuleBodyTab.Exclude}>Exclude</TabsTrigger>
-//         </TabsList>
-
-//         <TabsContent value={RuleBodyTab.Include}></TabsContent>
-//         <TabsContent value={RuleBodyTab.Exclude}></TabsContent>
-//       </Tabs>
-//     </div>
-//   );
-// };

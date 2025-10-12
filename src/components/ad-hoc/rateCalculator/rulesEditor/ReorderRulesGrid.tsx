@@ -1,7 +1,8 @@
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
+import { ICellRendererParams } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import { RuleHeaderRenderer } from './RuleEditor';
-import { sortRules } from './utils';
+import { RuleHeader } from './RuleHeader';
+import { RULE_HEADER_HEIGHT, sortRules } from './utils';
 
 interface ReorderRulesGridProps {
   rules: ContractRateRule[];
@@ -25,7 +26,10 @@ export const ReorderRulesGrid = ({
             rowDrag: true,
             cellClass: 'rules-editor-grid-header',
             sortable: false,
-            cellRenderer: RuleHeaderRenderer,
+            cellRenderer: (params: ICellRendererParams<ContractRateRule>) => {
+              if (!params.data) return null;
+              return <RuleHeader rule={params.data} />;
+            },
           },
         ]}
         gridOptions={{
@@ -34,7 +38,7 @@ export const ReorderRulesGrid = ({
         suppressCellFocus
         rowData={rules}
         rowDragManaged
-        rowHeight={68}
+        rowHeight={RULE_HEADER_HEIGHT}
         onRowDragEnd={(event) => {
           const newRuleIDToPriority: Record<string, number> = {};
           event.api.forEachNode((node, index) => {

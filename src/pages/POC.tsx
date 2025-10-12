@@ -44,7 +44,7 @@ export const POC = () => {
       <div className="flex-shrink-0">
         <BreadcrumbNav />
       </div>
-      <div className="flex-1">{renderPage()}</div>
+      <div className="flex-1 overflow-hidden">{renderPage()}</div>
     </div>
   );
 };
