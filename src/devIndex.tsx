@@ -1,19 +1,20 @@
 import React, { useMemo } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { APIClient } from './api-client/api-client';
-import App, { APIClientContext } from './App';
+import App, { AppContext } from './App';
 import './styles/globals.css';
 
 const BASE_URL = 'http://localhost:3005';
 
 const DevApp = () => {
   const apiClient = useMemo(() => new APIClient(BASE_URL), []);
+  const navigate = useNavigate();
   return (
     <>
-      <APIClientContext.Provider value={apiClient}>
+      <AppContext.Provider value={{ client: apiClient, navigate }}>
         <App />
-      </APIClientContext.Provider>
+      </AppContext.Provider>
     </>
   );
 };

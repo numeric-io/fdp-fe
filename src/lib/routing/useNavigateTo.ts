@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { AppContext } from '@/App';
+import { useCallback, useContext } from 'react';
 import {
   BASE_PATH,
   Location,
@@ -10,7 +10,7 @@ import {
 } from './types';
 
 export const useNavigateTo = (): ((location: Location) => void) => {
-  const navigate = useNavigate();
+  const { navigate } = useContext(AppContext);
 
   return useCallback(
     (location: Location) => {

@@ -3,7 +3,15 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { IBackendAPIClient } from './api-client/IBackendAPIClient';
 import POC from './pages/POC';
 
-export const APIClientContext = createContext<IBackendAPIClient | null>(null);
+interface AppContextType {
+  client: IBackendAPIClient | null;
+  navigate: (path: string) => void;
+}
+
+export const AppContext = createContext<AppContextType>({
+  client: null,
+  navigate: () => {},
+});
 
 const App = () => {
   return (
