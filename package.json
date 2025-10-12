@@ -1,6 +1,6 @@
 {
   "name": "@numeric-io/fdp-fe",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "type": "module",
   "exports": {
     ".": {
@@ -29,6 +29,7 @@
   "dependencies": {
     "@ag-grid-community/styles": "^32.3.9",
     "@numeric-io/fdp-api": "0.0.19",
+    "@numeric-io/result": "^1.0.3",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-slot": "^1.2.3",

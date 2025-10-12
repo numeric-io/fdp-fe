@@ -500,6 +500,7 @@ __metadata:
     "@ag-grid-community/styles": ^32.3.9
     "@eslint/js": ^9.35.0
     "@numeric-io/fdp-api": 0.0.19
+    "@numeric-io/result": ^1.0.3
     "@radix-ui/react-dialog": ^1.1.15
     "@radix-ui/react-popover": ^1.1.15
     "@radix-ui/react-slot": ^1.2.3
@@ -541,6 +542,13 @@ __metadata:
     react-dom: ">=18.0.0"
   languageName: unknown
   linkType: soft
+
+"@numeric-io/result@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@numeric-io/result@npm:1.0.3"
+  checksum: 0791f4450e69bd0c6bced8afa0e8b651904bdb6758be19cf49b37882cd15a09af462824dd0c7a30dd3820905633c265283d8ea4e5fd4157da12726cf9e70c4f1
+  languageName: node
+  linkType: hard
 
 "@numeric-io/temporal@npm:0.0.16":
   version: 0.0.16
