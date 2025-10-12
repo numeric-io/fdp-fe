@@ -1,7 +1,6 @@
 {
-  "name": "fdp-fe",
-  "version": "1.0.21",
-  "private": true,
+  "name": "@numeric-io/fdp-fe",
+  "version": "1.0.0",
   "type": "module",
   "exports": {
     ".": {
@@ -13,6 +12,9 @@
   "files": [
     "dist"
   ],
+  "publishConfig": {
+    "access": "restricted"
+  },
   "scripts": {
     "build": "rslib build",
     "dev": "rsbuild dev --open",
@@ -21,7 +23,8 @@
     "preview": "rsbuild preview",
     "add-shadcn": "npx shadcn@latest add  --path src/components/ui",
     "typecheck": "yarn tsc --noEmit --watch",
-    "up-numeric": "yarn up --exact @numeric-io/fdp-api"
+    "up-numeric": "yarn up --exact @numeric-io/fdp-api",
+    "publish": "yarn build && yarn npm publish"
   },
   "dependencies": {
     "@ag-grid-community/styles": "^32.3.9",
@@ -69,5 +72,6 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
-  }
+  },
+  "packageManager": "yarn@3.6.4"
 }
