@@ -5,12 +5,12 @@ import POC from './pages/POC';
 
 interface AppContextType {
   client: IBackendAPIClient | null;
-  navigate: (path: string) => void;
+  basePath: string;
 }
 
 export const AppContext = createContext<AppContextType>({
   client: null,
-  navigate: () => {},
+  basePath: '',
 });
 
 const App = () => {

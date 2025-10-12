@@ -1,7 +1,7 @@
 import { AppContext } from '@/App';
 import { useCallback, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  BASE_PATH,
   Location,
   LocationType,
   ModuleName,
@@ -10,18 +10,19 @@ import {
 } from './types';
 
 export const useNavigateTo = (): ((location: Location) => void) => {
-  const { navigate } = useContext(AppContext);
+  const navigate = useNavigate();
+  const { basePath } = useContext(AppContext);
 
   return useCallback(
     (location: Location) => {
-      navigate(locationToPath(location));
+      navigate(`${basePath}${locationToPath(location)}`);
     },
-    [navigate],
+    [navigate, basePath],
   );
 };
 
 export const locationToPath = (location: Location) => {
-  let path = BASE_PATH;
+  let path = '';
   switch (location.type) {
     case LocationType.RuleList:
       path += `/${ModuleName.Contract}`;

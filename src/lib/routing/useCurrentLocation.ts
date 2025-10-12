@@ -1,6 +1,7 @@
+import { AppContext } from '@/App';
+import { useContext } from 'react';
 import { useMatch, useSearchParams } from 'react-router-dom';
 import {
-  BASE_PATH,
   Location,
   LocationType,
   ModuleName,
@@ -9,11 +10,12 @@ import {
 } from './types';
 
 export const useCurrentLocation = (): Location => {
+  const { basePath } = useContext(AppContext);
   const [searchParams] = useSearchParams();
-  const contractListMatch = useMatch(BASE_PATH);
-  const ruleListMatch = useMatch(`${BASE_PATH}/${ModuleName.Contract}`);
+  const contractListMatch = useMatch(`${basePath}`);
+  const ruleListMatch = useMatch(`${basePath}/${ModuleName.Contract}`);
   const ruleEditorMatch = useMatch(
-    `${BASE_PATH}/${ModuleName.Contract}/${ModuleTabName.RulesEditor}`,
+    `${basePath}/${ModuleName.Contract}/${ModuleTabName.RulesEditor}`,
   );
 
   if (contractListMatch) {
