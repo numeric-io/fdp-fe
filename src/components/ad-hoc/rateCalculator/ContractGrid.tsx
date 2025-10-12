@@ -1,8 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { useContracts } from '@/lib/store/stores/rateCalculator/getters';
 import type { Contract } from '@/lib/store/stores/rateCalculator/types';
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-quartz.css';
 import { ICellRendererParams, type ColDef } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo } from 'react';

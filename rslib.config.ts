@@ -37,7 +37,7 @@ export default defineConfig({
         ],
       },
       externals: [
-        // Exclude all AG Grid CSS files as externals
+        // Exclude all AG Grid CSS files as externals using regex
         /^ag-grid.*\.css$/,
         // Also exclude specific AG Grid CSS imports
         'ag-grid-community/styles/ag-grid.css',
@@ -51,6 +51,19 @@ export default defineConfig({
         'ag-grid-enterprise/styles/ag-theme-material.css',
         'ag-grid-enterprise/styles/ag-theme-quartz.css',
       ],
+      // Additional configuration to prevent CSS bundling
+      optimization: {
+        splitChunks: {
+          cacheGroups: {
+            agGridStyles: {
+              test: /[\\/]node_modules[\\/]ag-grid.*\.css$/,
+              name: 'ag-grid-styles',
+              chunks: 'all',
+              enforce: true,
+            },
+          },
+        },
+      },
     },
   },
 })

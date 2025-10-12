@@ -4,8 +4,6 @@ import { useNavigateTo } from '@/lib/routing/useNavigateTo';
 import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters';
 import { useContractRateRulesByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors';
 import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
-import '@ag-grid-community/styles/ag-grid.css';
-import '@ag-grid-community/styles/ag-theme-quartz.css';
 import { type ColDef, type ICellRendererParams } from 'ag-grid-enterprise';
 import { AgGridReact } from 'ag-grid-react';
 import { useMemo } from 'react';
