@@ -12,6 +12,9 @@ enum ContractsPageTab {
 
 export const ContractsPage = () => {
   const navigateTo = useNavigateTo()
+  const contracts = useContracts()
+  console.log('ContractsPage - contracts from store:', contracts)
+
   return (
     <Tabs defaultValue={ContractsPageTab.Contracts} className="h-full">
       <TabsList>

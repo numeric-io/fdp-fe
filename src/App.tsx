@@ -1,5 +1,5 @@
 import { GetContractsAPI } from '@numeric-io/fdp-api'
-import { createContext, useContext, useEffect } from 'react'
+import { createContext, useCallback, useContext, useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { IBackendAPIClient } from './api-client/IBackendAPIClient'
 import { writeContracts } from './lib/store/stores/rateCalculator/write'
@@ -18,16 +18,27 @@ export const AppContext = createContext<AppContextType>({
 const App = () => {
   const { client } = useContext(AppContext)
 
-  async function fetchContracts() {
-    const contractsRes = await client?.request(GetContractsAPI, undefined)
-    if (!contractsRes) return console.error('No contracts found')
-    writeContracts(contractsRes.contracts)
-  }
+  const fetchContracts = useCallback(async () => {
+    try {
+      console.log('Fetching contracts...')
+      const contractsRes = await client?.request(GetContractsAPI, undefined)
+      console.log('Contracts response:', contractsRes)
+      if (!contractsRes) {
+        console.error('No contracts found')
+        return
+      }
+      console.log('Writing contracts to store:', contractsRes.contracts)
+      writeContracts(contractsRes.contracts)
+      console.log('Contracts written to store successfully')
+    } catch (error) {
+      console.error('Error fetching contracts:', error)
+    }
+  }, [client])
 
   useEffect(() => {
     if (!client) return console.error('Client not found')
     fetchContracts()
-  }, [client])
+  }, [client, fetchContracts])
 
   return (
     <Routes>
