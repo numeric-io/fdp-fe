@@ -22,4 +22,35 @@ export default defineConfig({
     target: 'web',
   },
   plugins: [pluginReact()],
+  // Exclude all AG Grid CSS files from being bundled
+  tools: {
+    rspack: {
+      module: {
+        rules: [
+          {
+            test: /node_modules\/ag-grid.*\.css$/,
+            type: 'asset/resource',
+            generator: {
+              filename: 'static/css/[name].[hash][ext]',
+            },
+          },
+        ],
+      },
+      externals: [
+        // Exclude all AG Grid CSS files as externals
+        /^ag-grid.*\.css$/,
+        // Also exclude specific AG Grid CSS imports
+        'ag-grid-community/styles/ag-grid.css',
+        'ag-grid-community/styles/ag-theme-alpine.css',
+        'ag-grid-community/styles/ag-theme-balham.css',
+        'ag-grid-community/styles/ag-theme-material.css',
+        'ag-grid-community/styles/ag-theme-quartz.css',
+        'ag-grid-enterprise/styles/ag-grid.css',
+        'ag-grid-enterprise/styles/ag-theme-alpine.css',
+        'ag-grid-enterprise/styles/ag-theme-balham.css',
+        'ag-grid-enterprise/styles/ag-theme-material.css',
+        'ag-grid-enterprise/styles/ag-theme-quartz.css',
+      ],
+    },
+  },
 })
