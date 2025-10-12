@@ -483,13 +483,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@numeric-io/fdp-api@npm:0.0.18":
-  version: 0.0.18
-  resolution: "@numeric-io/fdp-api@npm:0.0.18"
+"@numeric-io/fdp-api@npm:0.0.19":
+  version: 0.0.19
+  resolution: "@numeric-io/fdp-api@npm:0.0.19"
   dependencies:
     "@numeric-io/temporal": 0.0.16
     arktype: ^2.1.22
-  checksum: a261e75bdbff99ecd53ad81f83506969714aff04c24fe07d238b7896c48d5a8cddfa091df8e3d0d85c827f73c51258bc92fa2ae73596e40054dda3b544c877a4
+  checksum: f36f1554ced1d4bc5404d7e3eb04e0b8d3590a46eadabdef6f08819311fa35a149cfc3e610531f606910683afc1d5431d36f97c13ad974d403d20e6856191e61
   languageName: node
   linkType: hard
 
@@ -499,7 +499,7 @@ __metadata:
   dependencies:
     "@ag-grid-community/styles": ^32.3.9
     "@eslint/js": ^9.35.0
-    "@numeric-io/fdp-api": 0.0.18
+    "@numeric-io/fdp-api": 0.0.19
     "@radix-ui/react-dialog": ^1.1.15
     "@radix-ui/react-popover": ^1.1.15
     "@radix-ui/react-slot": ^1.2.3
