@@ -3,13 +3,12 @@ import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { APIClient } from "./api-client/api-client"
 import App, { AppContext } from "./App"
+import { env } from "./config"
 import { BASE_PATH } from "./lib/routing/types"
 import "./styles/globals.css"
 
-const BASE_URL = "http://localhost:3005"
-
 const DevApp = () => {
-  const apiClient = useMemo(() => new APIClient(BASE_URL), [])
+  const apiClient = useMemo(() => new APIClient(env().BACKEND_HOST), [])
   return (
     <>
       <AppContext.Provider value={{ client: apiClient, basePath: BASE_PATH }}>

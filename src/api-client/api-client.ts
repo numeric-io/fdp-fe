@@ -1,32 +1,32 @@
-import { APIRoute, ValidSpec } from '@numeric-io/fdp-api';
-import { Type } from 'arktype';
-import axios from 'axios';
-import { IBackendAPIClient } from './IBackendAPIClient';
+import { APIRoute, ValidSpec } from "@numeric-io/fdp-api"
+import { Type } from "arktype"
+import axios from "axios"
+import { IBackendAPIClient } from "./IBackendAPIClient"
 
 export interface RequestOptions {
-  method?: string;
-  body?: unknown;
+  method?: string
+  body?: unknown
 }
 
 export class APIClient implements IBackendAPIClient {
-  private baseUrl: string;
+  private baseUrl: string
   constructor(baseUrl: string) {
-    this.baseUrl = baseUrl;
+    this.baseUrl = baseUrl
   }
-  request = async <
-    Req extends ValidSpec | undefined,
-    Resp extends ValidSpec,
-    Fail extends ValidSpec | undefined,
-  >(
+  request = async <Req extends ValidSpec | undefined, Resp extends ValidSpec, Fail extends ValidSpec | undefined>(
     spec: APIRoute<Req, Resp, Fail>,
-    requestBody: Req,
-  ): Promise<Type<Resp>['infer']> => {
-    const { method } = spec;
+    requestBody: Req
+  ): Promise<Type<Resp>["infer"]> => {
+    const { method } = spec
     const response = await axios.request({
       url: `${this.baseUrl}${spec.path}`,
       method,
       data: requestBody,
-    });
-    return response.data;
-  };
+      headers: {
+        Authorization: "Bearer YOUR_ADMIN_TOKEN_HERE",
+        "Content-Type": "application/json",
+      },
+    })
+    return response.data
+  }
 }
