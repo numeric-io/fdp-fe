@@ -18,7 +18,7 @@ const App = () => {
   const { client } = useContext(AppContext)
 
   async function fetchContracts() {
-    const contractsRes = await client?.request(GetContractsAPI, {})
+    const contractsRes = await client?.request(GetContractsAPI, undefined)
     console.log(contractsRes)
   }
 
