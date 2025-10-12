@@ -4,18 +4,17 @@ import { useCurrentLocation } from '@/lib/routing/useCurrentLocation';
 import {
   AllCommunityModule,
   ClientSideRowModelModule,
-  LicenseManager,
   ModuleRegistry,
   RowDragModule,
   RowGroupingModule,
   RowGroupingPanelModule,
-  ValidationModule,
+  ValidationModule
 } from 'ag-grid-enterprise';
 import { ContractsPage } from './ContractsPage';
 import { RulesEditorPage } from './RulesEditorPage';
 import { RulesPage } from './RulesPage';
 
-LicenseManager.setLicenseKey(process.env.PUBLIC_AG_GRID_LICENSE);
+// LicenseManager.setLicenseKey(process.env.PUBLIC_AG_GRID_LICENSE);
 ModuleRegistry.registerModules([AllCommunityModule]);
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
