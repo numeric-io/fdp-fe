@@ -1,8 +1,9 @@
-import { ContractGrid } from '@/components/ad-hoc/rateCalculator/ContractGrid';
-import EventsGrid from '@/components/ad-hoc/rateCalculator/EventsGrid';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LocationType } from '@/lib/routing/types';
-import { useNavigateTo } from '@/lib/routing/useNavigateTo';
+import { ContractGrid } from '@/components/ad-hoc/rateCalculator/ContractGrid'
+import EventsGrid from '@/components/ad-hoc/rateCalculator/EventsGrid'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { LocationType } from '@/lib/routing/types'
+import { useNavigateTo } from '@/lib/routing/useNavigateTo'
+import { useContracts } from '@/lib/store/stores/rateCalculator/getters'
 
 enum ContractsPageTab {
   Contracts = 'contracts',
@@ -10,7 +11,7 @@ enum ContractsPageTab {
 }
 
 export const ContractsPage = () => {
-  const navigateTo = useNavigateTo();
+  const navigateTo = useNavigateTo()
   return (
     <Tabs defaultValue={ContractsPageTab.Contracts} className="h-full">
       <TabsList>
@@ -19,9 +20,12 @@ export const ContractsPage = () => {
       </TabsList>
 
       <TabsContent value={ContractsPageTab.Contracts}>
+        <pre>
+          <code>{JSON.stringify(useContracts(), null, 2)}</code>
+        </pre>
         <ContractGrid
           onSelectContract={(contractID) => {
-            navigateTo({ type: LocationType.RuleList, contractID });
+            navigateTo({ type: LocationType.RuleList, contractID })
           }}
         />
       </TabsContent>
@@ -29,5 +33,5 @@ export const ContractsPage = () => {
         <EventsGrid contractID={null} />
       </TabsContent>
     </Tabs>
-  );
-};
+  )
+}

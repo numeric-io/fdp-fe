@@ -1,24 +1,24 @@
-import { Button } from '@/components/ui/button';
-import { useContracts } from '@/lib/store/stores/rateCalculator/getters';
-import type { Contract } from '@/lib/store/stores/rateCalculator/types';
-import { ICellRendererParams, type ColDef } from 'ag-grid-enterprise';
-import { AgGridReact } from 'ag-grid-react';
-import { useMemo } from 'react';
+import { Button } from '@/components/ui/button'
+import { useContracts } from '@/lib/store/stores/rateCalculator/getters'
+import type { Contract } from '@/lib/store/stores/rateCalculator/types'
+import { ICellRendererParams, type ColDef } from 'ag-grid-enterprise'
+import { AgGridReact } from 'ag-grid-react'
+import { useMemo } from 'react'
 
 interface ContractGridContext {
-  onSelectContract: (contractID: string) => void;
+  onSelectContract: (contractID: string) => void
 }
 
 export interface ContractGridProps {
-  onSelectContract: (contractID: string) => void;
+  onSelectContract: (contractID: string) => void
 }
 
 export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
-  const rateRules = useContracts();
+  const rateRules = useContracts()
 
   const context: ContractGridContext = {
     onSelectContract,
-  };
+  }
 
   const colDefs = useMemo<ColDef<Contract>[]>(
     () => [
@@ -37,8 +37,8 @@ export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
         cellRenderer: ActionsCellRenderer,
       },
     ],
-    [],
-  );
+    []
+  )
 
   return (
     <div className="ag-theme-quartz h-full">
@@ -51,25 +51,23 @@ export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
         suppressCellFocus={true}
         className="contract-grid"
         onRowClicked={(event) => {
-          const contractID = event.data?.id;
+          const contractID = event.data?.id
           if (contractID) {
-            onSelectContract(contractID);
+            onSelectContract(contractID)
           }
         }}
       />
     </div>
-  );
-};
+  )
+}
 
-const ActionsCellRenderer = (
-  params: ICellRendererParams<Contract, unknown, ContractGridContext>,
-) => {
-  const onSelectContract = params.context?.onSelectContract;
+const ActionsCellRenderer = (params: ICellRendererParams<Contract, unknown, ContractGridContext>) => {
+  const onSelectContract = params.context?.onSelectContract
 
-  const contractID = params.data?.id;
+  const contractID = params.data?.id
 
   if (!onSelectContract || !contractID) {
-    return null;
+    return null
   }
 
   return (
@@ -77,10 +75,10 @@ const ActionsCellRenderer = (
       variant="outline"
       size="sm"
       onClick={() => {
-        onSelectContract(contractID);
+        onSelectContract(contractID)
       }}
     >
       View Rules
     </Button>
-  );
-};
+  )
+}
