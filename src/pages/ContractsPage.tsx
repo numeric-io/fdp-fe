@@ -23,9 +23,6 @@ export const ContractsPage = () => {
       </TabsList>
 
       <TabsContent value={ContractsPageTab.Contracts}>
-        <pre>
-          <code>{JSON.stringify(useContracts(), null, 2)}</code>
-        </pre>
         <ContractGrid
           onSelectContract={(contractID) => {
             navigateTo({ type: LocationType.RuleList, contractID })

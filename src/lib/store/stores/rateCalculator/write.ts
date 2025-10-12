@@ -12,12 +12,9 @@ export const writeEvents = (events: Events[]) => {
 }
 
 export const writeContracts = (contracts: Contract[]) => {
-  console.log('writeContracts called with:', contracts)
   useGlobalStore.setState((store: Store) => {
-    console.log('Current store state before update:', store.rateCalculatorStore.contracts)
     return produce(store, (draft) => {
       draft.rateCalculatorStore.contracts = contracts
     })
   })
-  console.log('Store state after update:', useGlobalStore.getState().rateCalculatorStore.contracts)
 }
