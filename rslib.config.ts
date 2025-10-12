@@ -1,5 +1,5 @@
-import { pluginReact } from '@rsbuild/plugin-react';
-import { defineConfig } from '@rslib/core';
+import { pluginReact } from '@rsbuild/plugin-react'
+import { defineConfig } from '@rslib/core'
 
 export default defineConfig({
   source: {
@@ -8,8 +8,7 @@ export default defineConfig({
     },
     define: {
       // Do not load the env variables into the bundle
-      'process.env.PUBLIC_AG_GRID_LICENSE':
-        'process.env.PUBLIC_AG_GRID_LICENSE',
+      'process.env.PUBLIC_AG_GRID_LICENSE': 'process.env.PUBLIC_AG_GRID_LICENSE',
     },
   },
   lib: [
@@ -23,4 +22,4 @@ export default defineConfig({
     target: 'web',
   },
   plugins: [pluginReact()],
-});
+})
