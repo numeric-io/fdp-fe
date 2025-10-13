@@ -1,32 +1,23 @@
-import { createSelector } from '../../createSelector';
-import type { Store } from '../../types';
-import type { Contract, ContractRateRule, Events, SKU } from './types';
+import { createSelector } from '../../createSelector'
+import type { Store } from '../../types'
+import type { Contract, ContractRateRule, EditingRules, Events, SKU } from './types'
 
-export const getEvents = (store: Store): Events[] =>
-  store.rateCalculatorStore.events;
-export const useEvents = createSelector(getEvents);
+export const getEvents = (store: Store): Events[] => store.rateCalculatorStore.events
+export const useEvents = createSelector(getEvents)
 
-export const getContracts = (store: Store): Contract[] =>
-  store.rateCalculatorStore.contracts;
-export const useContracts = createSelector(getContracts);
+export const getContracts = (store: Store): Contract[] => store.rateCalculatorStore.contracts
+export const useContracts = createSelector(getContracts)
 
-export const getContract = (
-  store: Store,
-  contractID: string,
-): Contract | null =>
-  store.rateCalculatorStore.contracts.find(
-    (contract) => contract.id === contractID,
-  ) ?? null;
-export const useContract = createSelector(getContract);
+export const getContract = (store: Store, contractID: string): Contract | null =>
+  store.rateCalculatorStore.contracts.find((contract) => contract.id === contractID) ?? null
+export const useContract = createSelector(getContract)
 
-export const getContractRateRules = (store: Store): ContractRateRule[] =>
-  store.rateCalculatorStore.rules;
-export const useContractRateRules = createSelector(getContractRateRules);
+export const getContractRateRules = (store: Store): ContractRateRule[] => store.rateCalculatorStore.rules
+export const useContractRateRules = createSelector(getContractRateRules)
 
-export const getSKUByID = (
-  store: Store,
-  contractID: string,
-  skuID: string | null,
-): SKU | null =>
-  getContract(store, contractID)?.skus.find((sku) => sku.id === skuID) ?? null;
-export const useSKUByID = createSelector(getSKUByID);
+export const getEditingRules = (store: Store): EditingRules | null => store.rateCalculatorStore.editingRules
+export const useEditingRules = createSelector(getEditingRules)
+
+export const getSKUByID = (store: Store, contractID: string, skuID: string | null): SKU | null =>
+  getContract(store, contractID)?.skus.find((sku) => sku.id === skuID) ?? null
+export const useSKUByID = createSelector(getSKUByID)

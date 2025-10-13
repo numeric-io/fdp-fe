@@ -8,5 +8,6 @@ export const useGlobalStore = create<Store>(() => ({
     events: SAMPLE_UNMATCHED_EVENTS,
     contracts: SAMPLE_CONTRACTS,
     rules: SAMPLE_CONTRACT_RATE_RULES,
+    editingRules: null,
   },
 }))

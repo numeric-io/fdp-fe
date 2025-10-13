@@ -9,10 +9,10 @@ interface RulesListProps {
   contractID: string
   skuID: string | null
   rules: ContractRateRule[]
-  setRules: React.Dispatch<React.SetStateAction<ContractRateRule[]>>
+  updateRules: (rules: ContractRateRule[]) => void
 }
 
-export const RulesList = ({ contractID, skuID, rules, setRules }: RulesListProps) => {
+export const RulesList = ({ contractID, skuID, rules, updateRules }: RulesListProps) => {
   const sku = useSKUByID(contractID, skuID)
   const [expandedRuleIDs, setExpandedRuleIDs] = useState<string[]>([])
   if (!sku) {
@@ -30,24 +30,23 @@ export const RulesList = ({ contractID, skuID, rules, setRules }: RulesListProps
               prev.includes(rule.id) ? prev.filter((id) => id !== rule.id) : [...prev, rule.id]
             )
           }
-          onUpdateRule={(rule) => setRules((prev) => prev.map((r) => (r.id === rule.id ? rule : r)))}
+          onUpdateRule={(rule) => updateRules(rules.map((r) => (r.id === rule.id ? rule : r)))}
         />
       ))}
       <Button
         variant="outline"
         size="sm"
         onClick={() => {
-          setRules((prev) => {
-            const maxPriority = Math.max(...prev.map((rule) => rule.priority))
-            const newRule = createDefaultRule({
-              priority: maxPriority + 1,
-              sku,
-              contractID,
-            })
-            const newRuleID = newRule.id
-            setExpandedRuleIDs((prev) => [...prev, newRuleID]) // Expand the new rule by default
-            return [...prev, newRule]
+          const maxPriority = Math.max(...rules.map((rule) => rule.priority))
+          const newRule = createDefaultRule({
+            priority: maxPriority + 1,
+            sku,
+            contractID,
           })
+          const newRuleID = newRule.id
+
+          updateRules([...rules, newRule])
+          setExpandedRuleIDs((prev) => [...prev, newRuleID]) // Expand the new rule by default
         }}
       >
         + Add Rule

@@ -2,14 +2,14 @@ import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { ICellRendererParams } from 'ag-grid-community'
 import { AgGridReact } from 'ag-grid-react'
 import { RuleHeader } from './RuleHeader'
-import { RULE_HEADER_HEIGHT, sortRules } from './utils'
+import { RULE_HEADER_HEIGHT } from './utils'
 
 interface ReorderRulesGridProps {
   rules: ContractRateRule[]
-  setRules: React.Dispatch<React.SetStateAction<ContractRateRule[]>>
+  updateRules: (rules: ContractRateRule[]) => void
 }
 
-export const ReorderRulesGrid = ({ rules, setRules }: ReorderRulesGridProps) => {
+export const ReorderRulesGrid = ({ rules, updateRules }: ReorderRulesGridProps) => {
   return (
     <div className="ag-theme-quartz h-full">
       <AgGridReact
@@ -43,16 +43,12 @@ export const ReorderRulesGrid = ({ rules, setRules }: ReorderRulesGridProps) => 
             if (!rowID) return
             newRuleIDToPriority[rowID] = index + 1
           })
-
-          setRules((prev) =>
-            sortRules(
-              prev.map((rule) => {
-                const newPriority = newRuleIDToPriority[rule.id]
-                if (newPriority === undefined) return rule
-                return { ...rule, priority: newPriority }
-              })
-            )
-          )
+          const newRules = rules.map((rule) => {
+            const newPriority = newRuleIDToPriority[rule.id]
+            if (newPriority === undefined) return rule
+            return { ...rule, priority: newPriority }
+          })
+          updateRules(newRules)
         }}
       />
     </div>
