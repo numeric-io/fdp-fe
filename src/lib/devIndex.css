@@ -1,0 +1,4 @@
+body,
+#fdp-root {
+  @apply h-screen;
+}

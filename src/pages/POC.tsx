@@ -50,7 +50,7 @@ export const POC = () => {
   }
 
   return (
-    <div className="h-full gap-2 flex flex-col">
+    <div className="h-full gap-2 flex flex-col" id="fdp-poc">
       <div className="flex-shrink-0">
         <div className="flex justify-between items-center">
           <BreadcrumbNav />

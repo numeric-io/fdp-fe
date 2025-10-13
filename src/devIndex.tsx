@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { APIClient } from './api-client/api-client'
 import App, { AppContext } from './App'
 import { env } from './config'
+import './lib/devIndex.css'
 import { BASE_PATH } from './lib/routing/types'
 import './styles/globals.css'
 
