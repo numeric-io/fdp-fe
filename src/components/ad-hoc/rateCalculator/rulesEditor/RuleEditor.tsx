@@ -1,9 +1,11 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/numeric-ui/label'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { APIRule } from '@numeric-io/fdp-api'
+import { HTMLInputTypeAttribute, useState } from 'react'
 import { RuleHeader } from './RuleHeader'
 
 interface RuleEditorProps {
@@ -40,10 +42,7 @@ export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEdit
 
       <TabsContent value={RuleBodyTab.Include}>
         <div className="flex flex-col gap-2">
-          <div>
-            <Label>Rate</Label>
-            <Input value={rule.rate} onChange={(e) => onUpdateRule({ ...rule, rate: e.target.value })} />
-          </div>
+          <RateEditor value={rule.rate} onChange={(value) => onUpdateRule({ ...rule, rate: value })} />
           {matchConditions}
         </div>
       </TabsContent>
@@ -149,6 +148,38 @@ const ConditionItem = ({ condition, onUpdate, onDelete }: ConditionItemProps) =>
       <Button variant="ghost" size="sm" className="flex-shrink-0" onClick={onDelete}>
         X
       </Button>
+    </div>
+  )
+}
+
+enum RateType {
+  FlatRate = 'flat-rate',
+  RateExpression = 'rate-expression',
+}
+
+const RateEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
+  const [inputType, setInputType] = useState<HTMLInputTypeAttribute>('number')
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex gap-2">
+        <Label>Rate Type:</Label>
+        <RadioGroup
+          defaultValue={RateType.FlatRate}
+          className="flex"
+          onValueChange={(value) => setInputType(value === RateType.FlatRate ? 'number' : 'text')}
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value={RateType.FlatRate} id={RateType.FlatRate} />
+            <Label htmlFor={RateType.FlatRate}>Flat Rate</Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value={RateType.RateExpression} id={RateType.RateExpression} />
+            <Label htmlFor={RateType.RateExpression}>Rate Expression</Label>
+          </div>
+        </RadioGroup>
+      </div>
+
+      <Input value={value} onChange={(e) => onChange(e.target.value)} type={inputType} />
     </div>
   )
 }
