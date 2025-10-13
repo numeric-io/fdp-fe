@@ -1,22 +1,19 @@
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
-import { ICellRendererParams } from 'ag-grid-community';
-import { AgGridReact } from 'ag-grid-react';
-import { RuleHeader } from './RuleHeader';
-import { RULE_HEADER_HEIGHT, sortRules } from './utils';
+import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
+import { ICellRendererParams } from 'ag-grid-community'
+import { AgGridReact } from 'ag-grid-react'
+import { RuleHeader } from './RuleHeader'
+import { RULE_HEADER_HEIGHT } from './utils'
 
 interface ReorderRulesGridProps {
-  rules: ContractRateRule[];
-  setRules: React.Dispatch<React.SetStateAction<ContractRateRule[]>>;
+  rules: ContractRateRule[]
+  updateRules: (rules: ContractRateRule[]) => void
 }
 
-export const ReorderRulesGrid = ({
-  rules,
-  setRules,
-}: ReorderRulesGridProps) => {
+export const ReorderRulesGrid = ({ rules, updateRules }: ReorderRulesGridProps) => {
   return (
     <div className="ag-theme-quartz h-full">
       <AgGridReact
-        theme={'legacy'}
+        // theme={'legacy'}
         className="rules-editor-grid"
         columnDefs={[
           {
@@ -27,8 +24,8 @@ export const ReorderRulesGrid = ({
             cellClass: 'rules-editor-grid-header',
             sortable: false,
             cellRenderer: (params: ICellRendererParams<ContractRateRule>) => {
-              if (!params.data) return null;
-              return <RuleHeader rule={params.data} />;
+              if (!params.data) return null
+              return <RuleHeader rule={params.data} />
             },
           },
         ]}
@@ -40,24 +37,20 @@ export const ReorderRulesGrid = ({
         rowDragManaged
         rowHeight={RULE_HEADER_HEIGHT}
         onRowDragEnd={(event) => {
-          const newRuleIDToPriority: Record<string, number> = {};
+          const newRuleIDToPriority: Record<string, number> = {}
           event.api.forEachNode((node, index) => {
-            const rowID = node.data?.id;
-            if (!rowID) return;
-            newRuleIDToPriority[rowID] = index + 1;
-          });
-
-          setRules((prev) =>
-            sortRules(
-              prev.map((rule) => {
-                const newPriority = newRuleIDToPriority[rule.id];
-                if (newPriority === undefined) return rule;
-                return { ...rule, priority: newPriority };
-              }),
-            ),
-          );
+            const rowID = node.data?.id
+            if (!rowID) return
+            newRuleIDToPriority[rowID] = index + 1
+          })
+          const newRules = rules.map((rule) => {
+            const newPriority = newRuleIDToPriority[rule.id]
+            if (newPriority === undefined) return rule
+            return { ...rule, priority: newPriority }
+          })
+          updateRules(newRules)
         }}
       />
     </div>
-  );
-};
+  )
+}

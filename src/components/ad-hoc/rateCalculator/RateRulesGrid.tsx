@@ -1,23 +1,23 @@
-import { Button } from '@/components/ui/button';
-import { LocationType } from '@/lib/routing/types';
-import { useNavigateTo } from '@/lib/routing/useNavigateTo';
-import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters';
-import { useContractRateRulesByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors';
-import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
-import { type ColDef, type ICellRendererParams } from 'ag-grid-enterprise';
-import { AgGridReact } from 'ag-grid-react';
-import { useMemo } from 'react';
+import { Button } from '@/components/ui/button'
+import { LocationType } from '@/lib/routing/types'
+import { useNavigateTo } from '@/lib/routing/useNavigateTo'
+import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters'
+import { useContractRateRulesByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
+import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
+import { type ColDef, type ICellRendererParams } from 'ag-grid-enterprise'
+import { AgGridReact } from 'ag-grid-react'
+import { useMemo } from 'react'
 
 interface RateRulesGridContext {
-  contractID: string;
+  contractID: string
 }
 
 export interface RateRulesGridProps {
-  contractID: string;
+  contractID: string
 }
 
 export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
-  const rateRules = useContractRateRulesByContractID(contractID);
+  const rateRules = useContractRateRulesByContractID(contractID)
 
   const colDefs = useMemo<ColDef<ContractRateRule>[]>(
     () => [
@@ -31,17 +31,17 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
       { field: 'rate', headerName: 'Rate' },
       { colId: 'actions', headerName: '', cellRenderer: ActionsCellRenderer },
     ],
-    [],
-  );
+    []
+  )
 
   const context: RateRulesGridContext = {
     contractID,
-  };
+  }
 
   return (
     <div className="ag-theme-quartz h-full">
       <AgGridReact
-        theme={'legacy'}
+        // theme={'legacy'}
         columnDefs={colDefs}
         rowData={rateRules}
         className="rate-rules-grid"
@@ -58,37 +58,33 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
         context={context}
       />
     </div>
-  );
-};
+  )
+}
 
-const ActionsCellRenderer = (
-  params: ICellRendererParams<ContractRateRule, string, RateRulesGridContext>,
-) => {
-  const navigateTo = useNavigateTo();
+const ActionsCellRenderer = (params: ICellRendererParams<ContractRateRule, string, RateRulesGridContext>) => {
+  const navigateTo = useNavigateTo()
   return (
     <Button
       variant="outline"
       size="sm"
       onClick={() => {
         if (!params.context?.contractID || !params.data?.sku.id) {
-          console.error('No contract ID or SKU ID provided');
-          return;
+          console.error('No contract ID or SKU ID provided')
+          return
         }
         navigateTo({
           type: LocationType.RuleEditor,
           contractID: params.context?.contractID,
           SKUID: params.data?.sku.id,
-        });
+        })
       }}
     >
       Edit
     </Button>
-  );
-};
+  )
+}
 
-const SKUCellRenderer = (
-  params: ICellRendererParams<unknown, string, RateRulesGridContext>,
-) => {
-  const sku = useSKUByID(params.context?.contractID, params.value ?? null);
-  return <div>{sku?.name ?? params.value}</div>;
-};
+const SKUCellRenderer = (params: ICellRendererParams<unknown, string, RateRulesGridContext>) => {
+  const sku = useSKUByID(params.context?.contractID, params.value ?? null)
+  return <div>{sku?.name ?? params.value}</div>
+}

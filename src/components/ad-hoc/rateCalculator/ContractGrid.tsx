@@ -14,7 +14,7 @@ export interface ContractGridProps {
 }
 
 export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
-  const rateRules = useContracts()
+  const contracts = useContracts()
 
   const context: ContractGridContext = {
     onSelectContract,
@@ -43,9 +43,9 @@ export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
   return (
     <div className="ag-theme-quartz h-full">
       <AgGridReact
-        theme={'legacy'}
+        // theme={'legacy'}
         columnDefs={colDefs}
-        rowData={rateRules}
+        rowData={contracts}
         context={context}
         cellSelection={false}
         suppressCellFocus={true}

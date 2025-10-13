@@ -2,9 +2,9 @@
   display: none;
 }
 
-.rules-editor-grid .ag-icon-grip:before {
+/* .rules-editor-grid .ag-icon-grip:before {
   background: none !important;
-}
+} */
 
 .ag-dnd-ghost-icon {
   /* Hide the drag icon in the preview because its styling is off */

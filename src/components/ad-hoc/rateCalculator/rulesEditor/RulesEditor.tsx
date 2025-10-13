@@ -1,35 +1,29 @@
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/numeric-ui/label';
-import { useContractRateRulesBySKUID } from '@/lib/store/stores/rateCalculator/memoSelectors';
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
-import { useEffect, useState } from 'react';
-import { ReorderRulesGrid } from './ReorderRulesGrid';
-import './RulesEditor.css';
-import { RulesList } from './RulesList';
-import { SKUSelect } from './SKUSelector';
-import { sortRules } from './utils';
+import { Button } from '@/components/ui/button'
+import { Label } from '@/components/ui/numeric-ui/label'
+import { useEditingRulesBySKUID } from '@/lib/store/stores/rateCalculator/memoSelectors'
+import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
+import { writeEditingRules } from '@/lib/store/stores/rateCalculator/write'
+import { useState } from 'react'
+import { ReorderRulesGrid } from './ReorderRulesGrid'
+import './RulesEditor.css'
+import { RulesList } from './RulesList'
+import { SKUSelect } from './SKUSelector'
 
 export interface RulesEditorProps {
-  contractID: string;
-  skuID: string | null;
-  onSelectSKU: (skuID: string) => void;
+  contractID: string
+  skuID: string | null
+  onSelectSKU: (skuID: string) => void
 }
 
-export const RulesEditor = ({
-  contractID,
-  skuID,
-  onSelectSKU,
-}: RulesEditorProps) => {
-  const rules = useContractRateRulesBySKUID(contractID, skuID);
-  const [editingRules, setEditingRules] = useState<ContractRateRule[]>(
-    sortRules(rules),
-  );
-  const [isReordering, setIsReordering] = useState(false);
+export const RulesEditor = ({ contractID, skuID, onSelectSKU }: RulesEditorProps) => {
+  const editingRules = useEditingRulesBySKUID(contractID, skuID)
+  const [isReordering, setIsReordering] = useState(false)
 
-  // Reset editing rules when rules change
-  useEffect(() => {
-    setEditingRules(sortRules(rules));
-  }, [rules]);
+  if (!skuID) return null
+
+  const onUpdateRules = (rules: ContractRateRule[]) => {
+    writeEditingRules({ contractID, skuID, rules })
+  }
 
   return (
     <div className={`h-full w-md flex flex-col gap-2 px-2`}>
@@ -39,7 +33,11 @@ export const RulesEditor = ({
           <SKUSelect
             contractID={contractID}
             selectedSKUID={skuID}
-            onSelectSKU={onSelectSKU}
+            onSelectSKU={(newSKUID) => {
+              // Clear editing rules
+              writeEditingRules(null)
+              onSelectSKU(newSKUID)
+            }}
           />
         </div>
         <div className="flex justify-between ">
@@ -55,16 +53,11 @@ export const RulesEditor = ({
       </div>
       <div className="flex-1 overflow-hidden">
         {isReordering ? (
-          <ReorderRulesGrid rules={editingRules} setRules={setEditingRules} />
+          <ReorderRulesGrid rules={editingRules} updateRules={onUpdateRules} />
         ) : (
-          <RulesList
-            contractID={contractID}
-            skuID={skuID}
-            rules={editingRules}
-            setRules={setEditingRules}
-          />
+          <RulesList contractID={contractID} skuID={skuID} rules={editingRules} updateRules={onUpdateRules} />
         )}
       </div>
     </div>
-  );
-};
+  )
+}
