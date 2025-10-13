@@ -1,8 +1,6 @@
-import { AppContext } from '@/App'
 import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
-import { locationToPath } from '@/lib/routing/useNavigateTo'
-import { useContext } from 'react'
+import { useNavigateTo } from '@/lib/routing/useNavigateTo'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,7 +12,7 @@ import {
 
 export const BreadcrumbNav = () => {
   const location = useCurrentLocation()
-  const { basePath } = useContext(AppContext)
+  const navigateTo = useNavigateTo()
 
   return (
     <Breadcrumb>
@@ -23,7 +21,11 @@ export const BreadcrumbNav = () => {
           {location.type === LocationType.ContractList ? (
             <BreadcrumbPage>Billing & Revenue</BreadcrumbPage>
           ) : (
-            <BreadcrumbLink href={locationToPath({ type: LocationType.ContractList }, basePath)}>
+            <BreadcrumbLink
+              onClick={() => {
+                navigateTo({ type: LocationType.ContractList })
+              }}
+            >
               {'Billing & Revenue'}
             </BreadcrumbLink>
           )}
@@ -34,13 +36,9 @@ export const BreadcrumbNav = () => {
             <BreadcrumbItem>
               {location.type === LocationType.RuleEditor ? (
                 <BreadcrumbLink
-                  href={locationToPath(
-                    {
-                      type: LocationType.RuleList,
-                      contractID: location.contractID,
-                    },
-                    basePath
-                  )}
+                  onClick={() => {
+                    navigateTo({ type: LocationType.RuleList, contractID: location.contractID })
+                  }}
                 >
                   {location.contractID}
                 </BreadcrumbLink>
