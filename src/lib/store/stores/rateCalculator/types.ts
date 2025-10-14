@@ -1,12 +1,12 @@
-import { AndExpression, APIBillingRecord, APIContract, APIRule } from '@numeric-io/fdp-api'
+import { APIBillingRecord, APIContract, APIRule } from '@numeric-io/fdp-api'
 
 export type Events = APIBillingRecord
 export type Contract = APIContract
-export type ContractRateRuleCondition = AndExpression['conditions'][number]
-export type ContractRateRuleConditions = AndExpression['conditions']
-export interface ContractRateRule extends APIRule {
-  conditions: AndExpression
-}
+export type Rate = APIRule['rate']
+export type ContractRateRuleCondition = APIRule['conditions']['conditions'][number]
+export type ContractRateRuleConditions = APIRule['conditions']['conditions']
+export type ContractRateRule = APIRule
+
 export type SKU = APIRule['sku']
 
 export interface EditingRules {

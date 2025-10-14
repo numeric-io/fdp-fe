@@ -77,13 +77,16 @@ const createDefaultRule = ({
       op: Operator.And,
       conditions: [
         {
-          op: Operator.Equal,
+          op: 'equal',
           field: '',
           value: '',
           type: ComparisonType.String,
         },
       ],
     },
-    rate: '0',
+    rate: {
+      t: 'number',
+      val: '0',
+    },
   }
 }

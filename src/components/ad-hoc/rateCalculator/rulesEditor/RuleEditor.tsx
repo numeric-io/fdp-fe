@@ -9,9 +9,9 @@ import {
   ContractRateRule,
   ContractRateRuleCondition,
   ContractRateRuleConditions,
+  Rate,
 } from '@/lib/store/stores/rateCalculator/types'
-import { ComparisonType, Operator } from '@numeric-io/fdp-api'
-import { HTMLInputTypeAttribute, useState } from 'react'
+import { Operator } from '@numeric-io/fdp-api'
 import { RuleHeader } from './RuleHeader'
 
 interface RuleEditorProps {
@@ -43,7 +43,7 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
       defaultValue={RuleBodyTab.Include}
       className="h-full w-full p-2"
       onValueChange={(value) => {
-        onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? '' : '0' })
+        onUpdateRule({ ...rule, rate: { t: 'number', val: value === RuleBodyTab.Include ? '' : '0' } })
       }}
     >
       <TabsList>
@@ -53,7 +53,7 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
 
       <TabsContent value={RuleBodyTab.Include}>
         <div className="flex flex-col gap-2">
-          <RateEditor value={rule.rate} onChange={(value) => onUpdateRule({ ...rule, rate: value })} />
+          <RateEditor rate={rule.rate} onChange={(rate) => onUpdateRule({ ...rule, rate })} />
           {matchConditions}
         </div>
       </TabsContent>
@@ -100,7 +100,7 @@ const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItem
         size="sm"
         className="flex-shrink-0 w-1/3"
         onClick={() => {
-          setConditions([...conditions, { op: Operator.Equal, field: '', value: '', type: ComparisonType.String }])
+          setConditions([...conditions, { op: 'equal', field: '', value: '', type: 'string' }])
         }}
       >
         + Add Condition
@@ -138,7 +138,7 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
         <Select
           value={condition.op}
           onValueChange={(value) => {
-            if (value === Operator.Equal || value === Operator.NotEqual) {
+            if (value === 'equal' || value === 'not_equal') {
               onUpdate({ ...condition, op: value, type: condition.type })
             }
           }}
@@ -147,8 +147,8 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
             <SelectValue>{condition.op}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={Operator.Equal}>{Operator.Equal}</SelectItem>
-            <SelectItem value={Operator.NotEqual}>{Operator.NotEqual}</SelectItem>
+            <SelectItem value={'equal'}>{'equal'}</SelectItem>
+            <SelectItem value={'not_equal'}>{'not_equal'}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -167,34 +167,34 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
   )
 }
 
-enum RateType {
-  FlatRate = 'flat-rate',
-  RateExpression = 'rate-expression',
-}
-
-const RateEditor = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => {
-  const [inputType, setInputType] = useState<HTMLInputTypeAttribute>('number')
+const RateEditor = ({ rate, onChange }: { rate: Rate; onChange: (value: Rate) => void }) => {
+  const inputType = rate.t === 'number' ? 'number' : 'text'
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-2">
         <Label>Rate Type:</Label>
         <RadioGroup
-          defaultValue={RateType.FlatRate}
+          defaultValue={'number'}
+          value={rate.t === 'number' ? 'number' : 'expression'}
           className="flex"
-          onValueChange={(value) => setInputType(value === RateType.FlatRate ? 'number' : 'text')}
+          onValueChange={(value) => {
+            if (value !== 'number' && value !== 'expression') return
+
+            onChange(value === 'number' ? { t: 'number', val: rate.val } : { t: 'expression', val: rate.val })
+          }}
         >
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value={RateType.FlatRate} id={RateType.FlatRate} />
-            <Label htmlFor={RateType.FlatRate}>Flat Rate</Label>
+            <RadioGroupItem value={'number'} id={'number'} />
+            <Label htmlFor={'number'}>Flat Rate</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value={RateType.RateExpression} id={RateType.RateExpression} />
-            <Label htmlFor={RateType.RateExpression}>Rate Expression</Label>
+            <RadioGroupItem value={'expression'} id={'expression'} />
+            <Label htmlFor={'expression'}>Rate Expression</Label>
           </div>
         </RadioGroup>
       </div>
 
-      <Input value={value} onChange={(e) => onChange(e.target.value)} type={inputType} />
+      <Input value={rate.val} onChange={(e) => onChange({ ...rate, val: e.target.value })} type={inputType} />
     </div>
   )
 }
