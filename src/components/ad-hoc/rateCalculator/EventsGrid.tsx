@@ -21,7 +21,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
 
   useEffect(() => {
     fetchEvents(client, { contractID })
-  }, [client, contractID])
+  }, [contractID]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const colDefs = useMemo<ColDef<Events>[]>(
     () => [

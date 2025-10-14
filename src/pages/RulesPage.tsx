@@ -16,11 +16,12 @@ export const RulesPage = () => {
   const { client } = useContext(AppContext)
   const location = useCurrentLocation()
 
+  const contractID = location.type === LocationType.RuleList ? location.contractID : null
+
   useEffect(() => {
-    if (location.type !== LocationType.RuleList) return
-    const { contractID } = location
+    if (!contractID) return
     fetchRules(client, contractID)
-  }, [client, location])
+  }, [client, contractID])
 
   if (location.type !== LocationType.RuleList) return null
 
