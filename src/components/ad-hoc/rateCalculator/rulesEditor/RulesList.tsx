@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters'
-import { ContractRateRule, Operator, SKU } from '@/lib/store/stores/rateCalculator/types'
+import { ContractRateRule, SKU } from '@/lib/store/stores/rateCalculator/types'
 import { generateShortUID } from '@/lib/utils'
+import { apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
 import { useState } from 'react'
 import { RuleEditor } from './RuleEditor'
 
@@ -37,7 +38,7 @@ export const RulesList = ({ contractID, skuID, rules, updateRules }: RulesListPr
         variant="outline"
         size="sm"
         onClick={() => {
-          const maxPriority = Math.max(...rules.map((rule) => rule.priority))
+          const maxPriority = rules.length ? Math.max(...rules.map((rule) => rule.priority)) : 0
           const newRule = createDefaultRule({
             priority: maxPriority + 1,
             sku,
@@ -69,10 +70,13 @@ const createDefaultRule = ({
     priority,
     sku,
     contract_id: contractID,
-    rule: {
-      op: Operator.And,
-      conditions: [],
-    },
+    conditions: [
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '',
+        value: '',
+      },
+    ],
     rate: '0',
   }
 }
