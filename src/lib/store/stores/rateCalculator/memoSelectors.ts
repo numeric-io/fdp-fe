@@ -13,6 +13,14 @@ export const useEventsByContractID = (contractID: string | null): Events[] => {
   }, [events, contractID])
 }
 
+// TODO: correct this
+export const useKeyOptionsByContractID = (contractID: string | null): string[] => {
+  const rules = useContractRateRulesByContractID(contractID)
+  return useMemo(() => {
+    return Array.from(new Set(rules.map((rule) => rule.conditions.map((condition) => condition.key)).flat()))
+  }, [rules])
+}
+
 export const useSKUsByContractID = (contractID: string): SKU[] => {
   const contract = useContract(contractID)
   return useMemo(() => {

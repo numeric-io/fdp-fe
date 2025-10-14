@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { AutocompleteInput } from '@/components/ui/numeric-ui/autocompleteInput'
 import { Label } from '@/components/ui/numeric-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { APIRule, apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
@@ -11,6 +13,7 @@ import { RuleHeader } from './RuleHeader'
 interface RuleEditorProps {
   rule: ContractRateRule
   isExpanded: boolean
+  keyOptions: string[]
   onClick: () => void
   onUpdateRule: (rule: ContractRateRule) => void
 }
@@ -20,12 +23,13 @@ enum RuleBodyTab {
   Exclude = 'exclude',
 }
 
-export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEditorProps) => {
+export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule }: RuleEditorProps) => {
   const matchConditions = (
     <div>
       <Label>Match when</Label>
       <ConditionItems
         conditions={rule.conditions}
+        keyOptions={keyOptions}
         setConditions={(condition) => onUpdateRule({ ...rule, conditions: condition })}
       />
     </div>
@@ -65,16 +69,18 @@ export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEdit
 
 interface ConditionItemsProps {
   conditions: APIRule['conditions']
+  keyOptions: string[]
   setConditions: (condition: APIRule['conditions']) => void
 }
 
-const ConditionItems = ({ conditions, setConditions }: ConditionItemsProps) => {
+const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItemsProps) => {
   return (
     <div className="flex flex-col gap-2">
       {conditions.map((condition, index) => {
         return (
           <ConditionItem
             key={index}
+            keyOptions={keyOptions}
             condition={{ ...condition, index }}
             onUpdate={(condition) => {
               setConditions(conditions.map((c, i) => (i === index ? condition : c)))
@@ -108,34 +114,43 @@ interface RuleCondition {
 
 interface ConditionItemProps {
   condition: RuleCondition
+  keyOptions: string[]
   onUpdate: (condition: RuleCondition) => void
   onDelete: () => void
 }
 
-const ConditionItem = ({ condition, onUpdate, onDelete }: ConditionItemProps) => {
+const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionItemProps) => {
   return (
     <div className="flex gap-2 bg-gray-50 p-1 rounded-md">
       <div className="flex flex-row gap-2 flex-wrap flex-1 ">
-        <Input
+        <AutocompleteInput
           className="w-3/4"
           value={condition.key}
+          options={keyOptions}
+          onSelectOption={(option) => {
+            onUpdate({ ...condition, key: option })
+          }}
           onChange={(e) => {
             onUpdate({ ...condition, key: e.target.value })
           }}
         />
-        {/* TODO: change to a select */}
-        <Input
-          className="w-1/5"
+        <Select
           value={condition.operator}
-          onChange={(e) => {
-            if (
-              e.target.value === apiRuleDefinitionOperator.Equals ||
-              e.target.value === apiRuleDefinitionOperator.NotEquals
-            ) {
-              onUpdate({ ...condition, operator: e.target.value })
+          onValueChange={(value) => {
+            if (value === apiRuleDefinitionOperator.Equals || value === apiRuleDefinitionOperator.NotEquals) {
+              onUpdate({ ...condition, operator: value })
             }
           }}
-        />
+        >
+          <SelectTrigger className="w-1/5">
+            <SelectValue>{condition.operator}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={apiRuleDefinitionOperator.Equals}>{apiRuleDefinitionOperator.Equals}</SelectItem>
+            <SelectItem value={apiRuleDefinitionOperator.NotEquals}>{apiRuleDefinitionOperator.NotEquals}</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Input
           className="w-full"
           value={condition.value}
