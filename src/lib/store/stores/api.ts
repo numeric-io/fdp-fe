@@ -2,7 +2,6 @@ import { IBackendAPIClient } from '@/api-client/IBackendAPIClient'
 import { GetContractsAPI } from '@numeric-io/fdp-api'
 import { Result } from '@numeric-io/result'
 import { Contract } from './rateCalculator/types'
-import { writeContracts } from './rateCalculator/write'
 
 export async function fetchContracts(client: IBackendAPIClient | null) {
   if (!client) return console.error('Client not found')
@@ -11,5 +10,5 @@ export async function fetchContracts(client: IBackendAPIClient | null) {
     contracts: Contract[]
   }>
   if (!contractsRes || !contractsRes.ok) return console.error('No contracts found')
-  writeContracts(contractsRes.data.contracts)
+  // writeContracts(contractsRes.data.contracts)
 }
