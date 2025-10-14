@@ -1,49 +1,38 @@
-import { Temporal } from '@numeric-io/temporal';
-import {
-  Operator,
-  type Contract,
-  type ContractRateRule,
-  type Events,
-} from './types';
+import { apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
+import { Temporal } from '@numeric-io/temporal'
+import { type Contract, type ContractRateRule, type Events } from './types'
 
 export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_consumer_new_origination',
     contract_id: 'rco_built',
     sku: { id: 'cla', name: 'CLA' },
-    rule: {
-      op: Operator.And,
-      conditions: [
-        {
-          op: Operator.Equal,
-          field: '.BILLABLE_EVENT_TYPE',
-          value: 'Collateral Unit Activation',
-        },
-        { op: Operator.Equal, field: '.AGREEMENT_TYPE', value: 'CONSUMER' },
-        {
-          op: Operator.GreaterThanOrEqual,
-          field: '.ACTIVATION_DATE',
-          value: '2025-08-01',
-        },
-      ],
-    },
+    conditions: [
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '.BILLABLE_EVENT_TYPE',
+        value: 'Collateral Unit Activation',
+      },
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '.AGREEMENT_TYPE',
+        value: 'CONSUMER',
+      },
+    ],
     rate: '693.0',
     priority: 1,
   },
   {
     id: 'cla_consumer_general',
     contract_id: 'rco_built',
-    rule: {
-      op: Operator.And,
-      conditions: [
-        {
-          op: Operator.Equal,
-          field: '.BILLABLE_EVENT_TYPE',
-          value: 'Collateral Unit Activation',
-        },
-        { op: Operator.Equal, field: '.AGREEMENT_TYPE', value: 'CONSUMER' },
-      ],
-    },
+    conditions: [
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '.BILLABLE_EVENT_TYPE',
+        value: 'Collateral Unit Activation',
+      },
+      { operator: apiRuleDefinitionOperator.Equals, key: '.AGREEMENT_TYPE', value: 'CONSUMER' },
+    ],
     rate: '650.0',
     priority: 2,
     sku: { id: 'cla', name: 'CLA' },
@@ -51,17 +40,13 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
   {
     id: 'cla_commercial_general',
     contract_id: 'rco_built',
-    rule: {
-      op: Operator.And,
-      conditions: [
-        {
-          op: Operator.Equal,
-          field: '.BILLABLE_EVENT_TYPE',
-          value: 'Collateral Unit Activation',
-        },
-        { op: Operator.Equal, field: '.AGREEMENT_TYPE', value: 'CRE' },
-      ],
-    },
+    conditions: [
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '.BILLABLE_EVENT_TYPE',
+        value: 'Collateral Unit Activation',
+      },
+    ],
     rate: '1000.0',
     priority: 3,
     sku: { id: 'cla', name: 'CLA' },
@@ -70,16 +55,13 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
     id: 'cla_ignore_non_upfront',
     contract_id: 'rco_built',
     sku: { id: 'cla', name: 'CLA' },
-    rule: {
-      op: Operator.And,
-      conditions: [
-        {
-          op: Operator.NotEqual,
-          field: '.BILLABLE_EVENT_TYPE',
-          value: 'Collateral Unit Activation',
-        },
-      ],
-    },
+    conditions: [
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '.BILLABLE_EVENT_TYPE',
+        value: 'Collateral Unit Activation',
+      },
+    ],
     rate: '0.0',
     priority: 4,
   },
@@ -87,20 +69,17 @@ export const SAMPLE_CONTRACT_RATE_RULES: ContractRateRule[] = [
     id: 'inspector_onsite_transactional',
     contract_id: 'rco_built',
     sku: { id: 'inspector_onsite', name: 'Inspector Onsite' },
-    rule: {
-      op: Operator.And,
-      conditions: [
-        {
-          op: Operator.Equal,
-          field: '.BILLABLE_EVENT_TYPE',
-          value: 'Completed Inspection',
-        },
-      ],
-    },
+    conditions: [
+      {
+        operator: apiRuleDefinitionOperator.Equals,
+        key: '.BILLABLE_EVENT_TYPE',
+        value: 'Completed Inspection',
+      },
+    ],
     rate: '0.0',
     priority: 1,
   },
-];
+]
 
 export const SAMPLE_CONTRACTS: Contract[] = [
   {
@@ -118,7 +97,7 @@ export const SAMPLE_CONTRACTS: Contract[] = [
     customer_name: 'Sample Contract',
     skus: [],
   },
-];
+]
 
 export const SAMPLE_UNMATCHED_EVENTS: Events[] = [
   {
@@ -142,4 +121,4 @@ export const SAMPLE_UNMATCHED_EVENTS: Events[] = [
     rate: '0.0',
     contract_id: 'rco_built',
   },
-];
+]

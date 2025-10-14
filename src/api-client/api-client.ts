@@ -1,6 +1,5 @@
 import { APIRoute, ValidSpec } from '@numeric-io/fdp-api'
 import { Result, Results } from '@numeric-io/result'
-import { Type } from 'arktype'
 import axios from 'axios'
 import { IBackendAPIClient } from './IBackendAPIClient'
 
@@ -16,8 +15,8 @@ export class APIClient implements IBackendAPIClient {
   }
   request = async <Req extends ValidSpec | undefined, Resp extends ValidSpec, Fail extends ValidSpec | undefined>(
     spec: APIRoute<Req, Resp, Fail>,
-    requestBody: Req
-  ): Promise<Result<Type<Resp>['infer']>> => {
+    requestBody: Req extends ValidSpec ? Req['infer'] : Req
+  ): Promise<Result<Resp['infer']>> => {
     const { method } = spec
     const response = await axios.request({
       url: `${this.baseUrl}${spec.path}`,

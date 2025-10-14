@@ -4,7 +4,7 @@ import { Label } from '@/components/ui/numeric-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
-import { APIRule } from '@numeric-io/fdp-api'
+import { APIRule, apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
 import { HTMLInputTypeAttribute, useState } from 'react'
 import { RuleHeader } from './RuleHeader'
 
@@ -24,7 +24,10 @@ export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEdit
   const matchConditions = (
     <div>
       <Label>Match when</Label>
-      <ConditionItems condition={rule.rule} setCondition={(condition) => onUpdateRule({ ...rule, rule: condition })} />
+      <ConditionItems
+        conditions={rule.conditions}
+        setConditions={(condition) => onUpdateRule({ ...rule, conditions: condition })}
+      />
     </div>
   )
   const body = (
@@ -61,12 +64,11 @@ export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEdit
 }
 
 interface ConditionItemsProps {
-  condition: APIRule['rule']
-  setCondition: (condition: APIRule['rule']) => void
+  conditions: APIRule['conditions']
+  setConditions: (condition: APIRule['conditions']) => void
 }
 
-const ConditionItems = ({ condition, setCondition }: ConditionItemsProps) => {
-  const conditions: Omit<Condition, 'index'>[] = (condition as any).conditions
+const ConditionItems = ({ conditions, setConditions }: ConditionItemsProps) => {
   return (
     <div className="flex flex-col gap-2">
       {conditions.map((condition, index) => {
@@ -75,16 +77,10 @@ const ConditionItems = ({ condition, setCondition }: ConditionItemsProps) => {
             key={index}
             condition={{ ...condition, index }}
             onUpdate={(condition) => {
-              setCondition({
-                ...condition,
-                conditions: conditions.map((c, i) => (i === index ? condition : c)),
-              })
+              setConditions(conditions.map((c, i) => (i === index ? condition : c)))
             }}
             onDelete={() => {
-              setCondition({
-                ...condition,
-                conditions: conditions.filter((_, i) => i !== index),
-              })
+              setConditions(conditions.filter((_, i) => i !== index))
             }}
           />
         )
@@ -94,10 +90,7 @@ const ConditionItems = ({ condition, setCondition }: ConditionItemsProps) => {
         size="sm"
         className="flex-shrink-0 w-1/3"
         onClick={() => {
-          setCondition({
-            ...condition,
-            conditions: [...conditions, { field: '', op: '', value: '' }],
-          })
+          setConditions([...conditions, { key: '', operator: apiRuleDefinitionOperator.Equals, value: '' }])
         }}
       >
         + Add Condition
@@ -106,16 +99,16 @@ const ConditionItems = ({ condition, setCondition }: ConditionItemsProps) => {
   )
 }
 
-interface Condition {
+interface RuleCondition {
   index: number
-  field: string
-  op: string
+  key: string
+  operator: apiRuleDefinitionOperator
   value: string
 }
 
 interface ConditionItemProps {
-  condition: Condition
-  onUpdate: (condition: Condition) => void
+  condition: RuleCondition
+  onUpdate: (condition: RuleCondition) => void
   onDelete: () => void
 }
 
@@ -125,16 +118,22 @@ const ConditionItem = ({ condition, onUpdate, onDelete }: ConditionItemProps) =>
       <div className="flex flex-row gap-2 flex-wrap flex-1 ">
         <Input
           className="w-3/4"
-          value={condition.field}
+          value={condition.key}
           onChange={(e) => {
-            onUpdate({ ...condition, field: e.target.value })
+            onUpdate({ ...condition, key: e.target.value })
           }}
         />
+        {/* TODO: change to a select */}
         <Input
           className="w-1/5"
-          value={condition.op}
+          value={condition.operator}
           onChange={(e) => {
-            onUpdate({ ...condition, op: e.target.value })
+            if (
+              e.target.value === apiRuleDefinitionOperator.Equals ||
+              e.target.value === apiRuleDefinitionOperator.NotEquals
+            ) {
+              onUpdate({ ...condition, operator: e.target.value })
+            }
           }}
         />
         <Input

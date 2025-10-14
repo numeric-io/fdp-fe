@@ -30,7 +30,7 @@ export const ContractsPage = () => {
         />
       </TabsContent>
       <TabsContent value={ContractsPageTab.Events}>
-        <EventsGrid contractID={null} />
+        <EventsGrid />
       </TabsContent>
     </Tabs>
   )
