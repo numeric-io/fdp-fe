@@ -5,8 +5,12 @@ import { Label } from '@/components/ui/numeric-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
-import { APIRule, apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
+import {
+  ContractRateRule,
+  ContractRateRuleCondition,
+  ContractRateRuleConditions,
+} from '@/lib/store/stores/rateCalculator/types'
+import { ComparisonType, Operator } from '@numeric-io/fdp-api'
 import { HTMLInputTypeAttribute, useState } from 'react'
 import { RuleHeader } from './RuleHeader'
 
@@ -28,9 +32,9 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
     <div>
       <Label>Match when</Label>
       <ConditionItems
-        conditions={rule.conditions}
+        conditions={rule.conditions.conditions}
         keyOptions={keyOptions}
-        setConditions={(condition) => onUpdateRule({ ...rule, conditions: condition })}
+        setConditions={(conditions) => onUpdateRule({ ...rule, conditions: { ...rule.conditions, conditions } })}
       />
     </div>
   )
@@ -68,9 +72,9 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
 }
 
 interface ConditionItemsProps {
-  conditions: APIRule['conditions']
+  conditions: ContractRateRuleConditions
   keyOptions: string[]
-  setConditions: (condition: APIRule['conditions']) => void
+  setConditions: (conditions: ContractRateRuleConditions) => void
 }
 
 const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItemsProps) => {
@@ -81,7 +85,7 @@ const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItem
           <ConditionItem
             key={index}
             keyOptions={keyOptions}
-            condition={{ ...condition, index }}
+            condition={condition}
             onUpdate={(condition) => {
               setConditions(conditions.map((c, i) => (i === index ? condition : c)))
             }}
@@ -96,7 +100,7 @@ const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItem
         size="sm"
         className="flex-shrink-0 w-1/3"
         onClick={() => {
-          setConditions([...conditions, { key: '', operator: apiRuleDefinitionOperator.Equals, value: '' }])
+          setConditions([...conditions, { op: Operator.Equal, field: '', value: '', type: ComparisonType.String }])
         }}
       >
         + Add Condition
@@ -105,49 +109,46 @@ const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItem
   )
 }
 
-interface RuleCondition {
-  index: number
-  key: string
-  operator: apiRuleDefinitionOperator
-  value: string
-}
-
 interface ConditionItemProps {
-  condition: RuleCondition
+  condition: ContractRateRuleCondition
   keyOptions: string[]
-  onUpdate: (condition: RuleCondition) => void
+  onUpdate: (condition: ContractRateRuleCondition) => void
   onDelete: () => void
 }
 
 const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionItemProps) => {
+  if (condition.op === Operator.Nullish) {
+    console.error('Not implemented: Nullish condition')
+    return null
+  }
   return (
     <div className="flex gap-2 bg-gray-50 p-1 rounded-md">
       <div className="flex flex-row gap-2 flex-wrap flex-1 ">
         <AutocompleteInput
           className="w-3/4"
-          value={condition.key}
+          value={condition.field}
           options={keyOptions}
           onSelectOption={(option) => {
-            onUpdate({ ...condition, key: option })
+            onUpdate({ ...condition, field: option })
           }}
           onChange={(e) => {
-            onUpdate({ ...condition, key: e.target.value })
+            onUpdate({ ...condition, field: e.target.value })
           }}
         />
         <Select
-          value={condition.operator}
+          value={condition.op}
           onValueChange={(value) => {
-            if (value === apiRuleDefinitionOperator.Equals || value === apiRuleDefinitionOperator.NotEquals) {
-              onUpdate({ ...condition, operator: value })
+            if (value === Operator.Equal || value === Operator.NotEqual) {
+              onUpdate({ ...condition, op: value, type: condition.type })
             }
           }}
         >
           <SelectTrigger className="w-1/5">
-            <SelectValue>{condition.operator}</SelectValue>
+            <SelectValue>{condition.op}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={apiRuleDefinitionOperator.Equals}>{apiRuleDefinitionOperator.Equals}</SelectItem>
-            <SelectItem value={apiRuleDefinitionOperator.NotEquals}>{apiRuleDefinitionOperator.NotEquals}</SelectItem>
+            <SelectItem value={Operator.Equal}>{Operator.Equal}</SelectItem>
+            <SelectItem value={Operator.NotEqual}>{Operator.NotEqual}</SelectItem>
           </SelectContent>
         </Select>
 

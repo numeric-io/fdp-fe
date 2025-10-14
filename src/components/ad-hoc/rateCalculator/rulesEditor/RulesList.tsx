@@ -3,7 +3,7 @@ import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters'
 import { useKeyOptionsByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { ContractRateRule, SKU } from '@/lib/store/stores/rateCalculator/types'
 import { generateShortUID } from '@/lib/utils'
-import { apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
+import { ComparisonType, Operator } from '@numeric-io/fdp-api'
 import { useState } from 'react'
 import { RuleEditor } from './RuleEditor'
 
@@ -73,13 +73,17 @@ const createDefaultRule = ({
     priority,
     sku,
     contract_id: contractID,
-    conditions: [
-      {
-        operator: apiRuleDefinitionOperator.Equals,
-        key: '',
-        value: '',
-      },
-    ],
+    conditions: {
+      op: Operator.And,
+      conditions: [
+        {
+          op: Operator.Equal,
+          field: '',
+          value: '',
+          type: ComparisonType.String,
+        },
+      ],
+    },
     rate: '0',
   }
 }

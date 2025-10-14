@@ -17,7 +17,9 @@ export const useEventsByContractID = (contractID: string | null): Events[] => {
 export const useKeyOptionsByContractID = (contractID: string | null): string[] => {
   const rules = useContractRateRulesByContractID(contractID)
   return useMemo(() => {
-    return Array.from(new Set(rules.map((rule) => rule.conditions.map((condition) => condition.key)).flat()))
+    return Array.from(
+      new Set(rules.map((rule) => rule.conditions.conditions.map((condition) => condition.field)).flat())
+    )
   }, [rules])
 }
 
