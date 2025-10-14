@@ -45,10 +45,16 @@ export const AutocompleteInput = ({ options, onSelectOption, className, ...props
             }}
             onKeyDown={(e) => {
               if (e.key === 'ArrowDown') {
-                setFocusedOption((prev) => (prev === null ? options[0] : options[options.indexOf(prev) + 1]))
+                setFocusedOption((prev) => {
+                  const index = prev === null ? -1 : options.indexOf(prev)
+                  return options[index + 1] ?? options[0] ?? null
+                })
                 e.preventDefault()
               } else if (e.key === 'ArrowUp') {
-                setFocusedOption((prev) => (prev === null ? options[0] : options[options.indexOf(prev) - 1]))
+                setFocusedOption((prev) => {
+                  const index = prev === null ? -1 : options.indexOf(prev)
+                  return options[index - 1] ?? options[options.length - 1] ?? null
+                })
                 e.preventDefault()
               } else if (e.key === 'Enter' && focusedOption !== null) {
                 onSelect(focusedOption)
