@@ -1,8 +1,11 @@
-import EventsGrid from '@/components/ad-hoc/rateCalculator/EventsGrid';
-import { RateRulesGrid } from '@/components/ad-hoc/rateCalculator/RateRulesGrid';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { LocationType } from '@/lib/routing/types';
-import { useCurrentLocation } from '@/lib/routing/useCurrentLocation';
+import { AppContext } from '@/App'
+import EventsGrid from '@/components/ad-hoc/rateCalculator/EventsGrid'
+import { RateRulesGrid } from '@/components/ad-hoc/rateCalculator/RateRulesGrid'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { LocationType } from '@/lib/routing/types'
+import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
+import { fetchRules } from '@/lib/store/stores/api'
+import { useContext, useEffect } from 'react'
 
 enum RulesPageTab {
   Rules = 'rules',
@@ -10,8 +13,16 @@ enum RulesPageTab {
 }
 
 export const RulesPage = () => {
-  const location = useCurrentLocation();
-  if (location.type !== LocationType.RuleList) return null;
+  const { client } = useContext(AppContext)
+  const location = useCurrentLocation()
+
+  useEffect(() => {
+    if (location.type !== LocationType.RuleList) return
+    const { contractID } = location
+    fetchRules(client, contractID)
+  }, [client, location])
+
+  if (location.type !== LocationType.RuleList) return null
 
   return (
     <Tabs defaultValue={RulesPageTab.Rules} className="h-full">
@@ -27,5 +38,5 @@ export const RulesPage = () => {
         <EventsGrid contractID={location.contractID} />
       </TabsContent>
     </Tabs>
-  );
-};
+  )
+}

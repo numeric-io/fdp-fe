@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { IBackendAPIClient } from './api-client/IBackendAPIClient'
-import { fetchContracts, fetchRules } from './lib/store/stores/api'
+import { fetchContracts } from './lib/store/stores/api'
 import POC from './pages/POC'
 
 interface AppContextType {
@@ -19,10 +19,6 @@ const App = () => {
 
   useEffect(() => {
     fetchContracts(client)
-  }, [client])
-
-  useEffect(() => {
-    fetchRules(client)
   }, [client])
 
   return (

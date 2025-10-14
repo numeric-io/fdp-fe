@@ -10,10 +10,10 @@ export async function fetchContracts(client: IBackendAPIClient | null) {
   writeContracts(contractsRes.data.contracts)
 }
 
-export async function fetchRules(client: IBackendAPIClient | null) {
+export async function fetchRules(client: IBackendAPIClient | null, contractID: string) {
   if (!client) return console.error('Client not found')
 
-  const rulesRes = await client.request(GetContractRulesAPI, { contract_id: '1' })
+  const rulesRes = await client.request(GetContractRulesAPI, { contract_id: contractID })
   if (!rulesRes || !rulesRes.ok) return console.error('No rules found')
   writeContractRateRules(rulesRes.data.rules)
 }
