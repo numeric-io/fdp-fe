@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { AutocompleteInput } from '@/components/ui/numeric-ui/autocompleteInput'
 import { Label } from '@/components/ui/numeric-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -116,9 +117,13 @@ const ConditionItem = ({ condition, onUpdate, onDelete }: ConditionItemProps) =>
   return (
     <div className="flex gap-2 bg-gray-50 p-1 rounded-md">
       <div className="flex flex-row gap-2 flex-wrap flex-1 ">
-        <Input
+        <AutocompleteInput
           className="w-3/4"
           value={condition.key}
+          options={['test', 'test2']}
+          onSelectOption={(option) => {
+            onUpdate({ ...condition, key: option })
+          }}
           onChange={(e) => {
             onUpdate({ ...condition, key: e.target.value })
           }}
