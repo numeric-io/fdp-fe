@@ -1,5 +1,6 @@
 import { IBackendAPIClient } from '@/api-client/IBackendAPIClient'
 import { GetBillingRecordsAPI, GetContractRulesAPI, GetContractsAPI } from '@numeric-io/fdp-api'
+import { Temporal } from '@numeric-io/temporal'
 import { writeContractRateRules, writeContracts, writeEvents } from './rateCalculator/write'
 
 export async function fetchContracts(client: IBackendAPIClient | null) {
@@ -15,13 +16,24 @@ export async function fetchRules(client: IBackendAPIClient | null, contractID: s
 
   const rulesRes = await client.request(GetContractRulesAPI, { contract_id: contractID })
   if (!rulesRes || !rulesRes.ok) return console.error('No rules found')
+
   writeContractRateRules(rulesRes.data.rules)
 }
 
-export async function fetchEvents(client: IBackendAPIClient | null, args: { contractID?: string }) {
+export async function fetchEvents(
+  client: IBackendAPIClient | null,
+  args: { contractID?: string; month: number; year: number }
+) {
   if (!client) return console.error('Client not found')
 
-  const eventsRes = await client.request(GetBillingRecordsAPI, { contract_id: args.contractID })
+  const startOfMonth = Temporal.PlainDate.from({ year: args.year, month: args.month, day: 1 })
+  const endOfMonth = startOfMonth.with({ day: startOfMonth.daysInMonth })
+
+  const eventsRes = await client.request(GetBillingRecordsAPI, {
+    contract_id: args.contractID,
+    start_date: startOfMonth,
+    end_date: endOfMonth,
+  })
   if (!eventsRes || !eventsRes.ok) return console.error('No events found')
   writeEvents(eventsRes.data.billing_records)
 }
