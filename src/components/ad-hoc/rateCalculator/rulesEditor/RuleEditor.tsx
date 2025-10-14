@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { AutocompleteInput } from '@/components/ui/numeric-ui/autocompleteInput'
 import { Label } from '@/components/ui/numeric-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { APIRule, apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
@@ -133,19 +134,23 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
             onUpdate({ ...condition, key: e.target.value })
           }}
         />
-        {/* TODO: change to a select */}
-        <Input
-          className="w-1/5"
+        <Select
           value={condition.operator}
-          onChange={(e) => {
-            if (
-              e.target.value === apiRuleDefinitionOperator.Equals ||
-              e.target.value === apiRuleDefinitionOperator.NotEquals
-            ) {
-              onUpdate({ ...condition, operator: e.target.value })
+          onValueChange={(value) => {
+            if (value === apiRuleDefinitionOperator.Equals || value === apiRuleDefinitionOperator.NotEquals) {
+              onUpdate({ ...condition, operator: value })
             }
           }}
-        />
+        >
+          <SelectTrigger className="w-1/5">
+            <SelectValue>{condition.operator}</SelectValue>
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value={apiRuleDefinitionOperator.Equals}>{apiRuleDefinitionOperator.Equals}</SelectItem>
+            <SelectItem value={apiRuleDefinitionOperator.NotEquals}>{apiRuleDefinitionOperator.NotEquals}</SelectItem>
+          </SelectContent>
+        </Select>
+
         <Input
           className="w-full"
           value={condition.value}
