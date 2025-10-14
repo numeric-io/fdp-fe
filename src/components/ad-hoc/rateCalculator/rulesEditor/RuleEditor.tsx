@@ -11,7 +11,6 @@ import {
   ContractRateRuleConditions,
   Rate,
 } from '@/lib/store/stores/rateCalculator/types'
-import { Operator } from '@numeric-io/fdp-api'
 import { RuleHeader } from './RuleHeader'
 
 interface RuleEditorProps {
@@ -100,7 +99,7 @@ const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItem
         size="sm"
         className="flex-shrink-0 w-1/3"
         onClick={() => {
-          setConditions([...conditions, { op: 'equal', field: '', value: '', type: 'string' }])
+          setConditions([...conditions, { op: 'eq', field: '', value: '', type: 'string' }])
         }}
       >
         + Add Condition
@@ -116,16 +115,22 @@ interface ConditionItemProps {
   onDelete: () => void
 }
 
+const OperatorLabelMap = {
+  eq: '=',
+  neq: '≠',
+  gt: '>',
+  gte: '≥',
+  lt: '<',
+  lte: '≤',
+  nullish: 'is empty',
+}
+
 const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionItemProps) => {
-  if (condition.op === Operator.Nullish) {
-    console.error('Not implemented: Nullish condition')
-    return null
-  }
   return (
     <div className="flex gap-2 bg-gray-50 p-1 rounded-md">
       <div className="flex flex-row gap-2 flex-wrap flex-1 ">
         <AutocompleteInput
-          className="w-3/4"
+          className="w-3/5"
           value={condition.field}
           options={keyOptions}
           onSelectOption={(option) => {
@@ -137,28 +142,41 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
         />
         <Select
           value={condition.op}
-          onValueChange={(value) => {
-            if (value === 'equal' || value === 'not_equal') {
-              onUpdate({ ...condition, op: value, type: condition.type })
+          onValueChange={(newOp) => {
+            const value = condition.op === 'nullish' ? '' : condition.value
+            if (newOp === 'eq' || newOp === 'neq') {
+              onUpdate({ ...condition, op: newOp, type: 'string', value })
+            } else if (newOp === 'gt' || newOp === 'gte' || newOp === 'lt' || newOp === 'lte') {
+              onUpdate({ ...condition, op: newOp, type: 'number', value })
+            } else if (newOp === 'nullish') {
+              onUpdate({ ...condition, op: newOp })
+            } else {
+              return
             }
           }}
         >
-          <SelectTrigger className="w-1/5">
-            <SelectValue>{condition.op}</SelectValue>
+          <SelectTrigger className="w-1/3">
+            <SelectValue>{OperatorLabelMap[condition.op] ?? condition.op}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={'equal'}>{'equal'}</SelectItem>
-            <SelectItem value={'not_equal'}>{'not_equal'}</SelectItem>
+            <SelectItem value={'eq'}>{OperatorLabelMap.eq}</SelectItem>
+            <SelectItem value={'neq'}>{OperatorLabelMap.neq}</SelectItem>
+            <SelectItem value={'gt'}>{OperatorLabelMap.gt}</SelectItem>
+            <SelectItem value={'gte'}>{OperatorLabelMap.gte}</SelectItem>
+            <SelectItem value={'lt'}>{OperatorLabelMap.lt}</SelectItem>
+            <SelectItem value={'lte'}>{OperatorLabelMap.lte}</SelectItem>
+            <SelectItem value={'nullish'}>{OperatorLabelMap.nullish}</SelectItem>
           </SelectContent>
         </Select>
-
-        <Input
-          className="w-full"
-          value={condition.value}
-          onChange={(e) => {
-            onUpdate({ ...condition, value: e.target.value })
-          }}
-        />
+        {condition.op !== 'nullish' && (
+          <Input
+            className="w-full"
+            value={condition.value}
+            onChange={(e) => {
+              onUpdate({ ...condition, value: e.target.value })
+            }}
+          />
+        )}
       </div>
       <Button variant="ghost" size="sm" className="flex-shrink-0" onClick={onDelete}>
         X
