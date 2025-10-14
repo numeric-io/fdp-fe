@@ -43,7 +43,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
     <div className="h-full flex flex-col gap-2">
       <SearchField query={query} setQuery={setQuery} />
       <div className="flex-1">
-        <AgGridReact columnDefs={colDefs} rowData={events} />
+        <AgGridReact columnDefs={colDefs} rowData={events} quickFilterText={query} />
       </div>
     </div>
   )

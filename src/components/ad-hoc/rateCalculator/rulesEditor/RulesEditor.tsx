@@ -19,9 +19,8 @@ export const RulesEditor = ({ contractID, skuID, onSelectSKU }: RulesEditorProps
   const editingRules = useEditingRulesBySKUID(contractID, skuID)
   const [isReordering, setIsReordering] = useState(false)
 
-  if (!skuID) return null
-
   const onUpdateRules = (rules: ContractRateRule[]) => {
+    if (!skuID) return
     writeEditingRules({ contractID, skuID, rules })
   }
 
@@ -40,16 +39,18 @@ export const RulesEditor = ({ contractID, skuID, onSelectSKU }: RulesEditorProps
             }}
           />
         </div>
-        <div className="flex justify-between ">
-          <Label>{`Rules (${editingRules.length})`}</Label>
-          <Button
-            variant={isReordering ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setIsReordering((prev) => !prev)}
-          >
-            {isReordering ? 'Done Reordering' : 'Reorder Rules'}
-          </Button>
-        </div>
+        {skuID && (
+          <div className="flex justify-between ">
+            <Label>{`Rules (${editingRules.length})`}</Label>
+            <Button
+              variant={isReordering ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setIsReordering((prev) => !prev)}
+            >
+              {isReordering ? 'Done Reordering' : 'Reorder Rules'}
+            </Button>
+          </div>
+        )}
       </div>
       <div className="flex-1 overflow-hidden">
         {isReordering ? (

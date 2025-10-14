@@ -54,6 +54,18 @@ export const POC = () => {
       <div className="flex-shrink-0">
         <div className="flex justify-between items-center">
           <BreadcrumbNav />
+
+          {location.type === LocationType.RuleList && (
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => {
+                navigateTo({ type: LocationType.RuleEditor, contractID: location.contractID, SKUID: null })
+              }}
+            >
+              Add Rule
+            </Button>
+          )}
           {location.type === LocationType.RuleEditor && (
             <div className="flex gap-2">
               <Button
