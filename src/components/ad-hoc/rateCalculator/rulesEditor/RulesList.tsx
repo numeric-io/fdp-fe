@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters'
+import { useKeyOptionsByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { ContractRateRule, SKU } from '@/lib/store/stores/rateCalculator/types'
 import { generateShortUID } from '@/lib/utils'
 import { apiRuleDefinitionOperator } from '@numeric-io/fdp-api'
@@ -15,6 +16,7 @@ interface RulesListProps {
 
 export const RulesList = ({ contractID, skuID, rules, updateRules }: RulesListProps) => {
   const sku = useSKUByID(contractID, skuID)
+  const keyOptions = useKeyOptionsByContractID(contractID)
   const [expandedRuleIDs, setExpandedRuleIDs] = useState<string[]>([])
   if (!sku) {
     return null
@@ -26,6 +28,7 @@ export const RulesList = ({ contractID, skuID, rules, updateRules }: RulesListPr
           key={rule.id}
           rule={rule}
           isExpanded={expandedRuleIDs.includes(rule.id)}
+          keyOptions={keyOptions}
           onClick={() =>
             setExpandedRuleIDs((prev) =>
               prev.includes(rule.id) ? prev.filter((id) => id !== rule.id) : [...prev, rule.id]

@@ -12,6 +12,7 @@ import { RuleHeader } from './RuleHeader'
 interface RuleEditorProps {
   rule: ContractRateRule
   isExpanded: boolean
+  keyOptions: string[]
   onClick: () => void
   onUpdateRule: (rule: ContractRateRule) => void
 }
@@ -21,12 +22,13 @@ enum RuleBodyTab {
   Exclude = 'exclude',
 }
 
-export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEditorProps) => {
+export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule }: RuleEditorProps) => {
   const matchConditions = (
     <div>
       <Label>Match when</Label>
       <ConditionItems
         conditions={rule.conditions}
+        keyOptions={keyOptions}
         setConditions={(condition) => onUpdateRule({ ...rule, conditions: condition })}
       />
     </div>
@@ -66,16 +68,18 @@ export const RuleEditor = ({ rule, isExpanded, onClick, onUpdateRule }: RuleEdit
 
 interface ConditionItemsProps {
   conditions: APIRule['conditions']
+  keyOptions: string[]
   setConditions: (condition: APIRule['conditions']) => void
 }
 
-const ConditionItems = ({ conditions, setConditions }: ConditionItemsProps) => {
+const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItemsProps) => {
   return (
     <div className="flex flex-col gap-2">
       {conditions.map((condition, index) => {
         return (
           <ConditionItem
             key={index}
+            keyOptions={keyOptions}
             condition={{ ...condition, index }}
             onUpdate={(condition) => {
               setConditions(conditions.map((c, i) => (i === index ? condition : c)))
@@ -109,18 +113,19 @@ interface RuleCondition {
 
 interface ConditionItemProps {
   condition: RuleCondition
+  keyOptions: string[]
   onUpdate: (condition: RuleCondition) => void
   onDelete: () => void
 }
 
-const ConditionItem = ({ condition, onUpdate, onDelete }: ConditionItemProps) => {
+const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionItemProps) => {
   return (
     <div className="flex gap-2 bg-gray-50 p-1 rounded-md">
       <div className="flex flex-row gap-2 flex-wrap flex-1 ">
         <AutocompleteInput
           className="w-3/4"
           value={condition.key}
-          options={['test', 'test2']}
+          options={keyOptions}
           onSelectOption={(option) => {
             onUpdate({ ...condition, key: option })
           }}
