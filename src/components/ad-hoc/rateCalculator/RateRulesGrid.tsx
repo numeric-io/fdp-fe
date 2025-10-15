@@ -20,16 +20,34 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
 
   const colDefs = useMemo<ColDef<ContractRateRule>[]>(
     () => [
-      { field: 'id', headerName: 'ID', flex: 1 },
       {
         field: 'sku',
         headerName: 'SKU',
+        valueGetter: (params) => `SKU: ${params.data?.sku}`,
         rowGroup: true,
+        hide: true,
+      },
+      {
+        field: 'priority',
+        headerName: 'Rule',
+        valueGetter: (params) => `Rule-${params.data?.priority}`,
       },
       {
         field: 'rate',
         headerName: 'Rate',
         valueGetter: (params) => (params.data?.rate === null ? 'Exclude' : params.data?.rate.val),
+      },
+      {
+        field: 'conditions',
+        headerName: 'Conditions',
+        flex: 1,
+        valueGetter: (params) =>
+          params.data?.conditions.conditions
+            .map(
+              (condition) =>
+                `${condition.field} ${condition.op} ${condition.op === 'nullish' ? 'is empty' : condition.value}`
+            )
+            .join(', '),
       },
       { colId: 'actions', headerName: '', cellRenderer: ActionsCellRenderer },
     ],

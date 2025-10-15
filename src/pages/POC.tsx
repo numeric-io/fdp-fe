@@ -7,7 +7,6 @@ import { useNavigateTo } from '@/lib/routing/useNavigateTo'
 import { saveRules } from '@/lib/store/stores/api'
 import { useContractRateRules, useEditingRules } from '@/lib/store/stores/rateCalculator/getters'
 import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
-import { writeEditingRules } from '@/lib/store/stores/rateCalculator/write'
 import {
   AllCommunityModule,
   ClientSideRowModelModule,
@@ -78,7 +77,6 @@ export const POC = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => {
-                  writeEditingRules(null)
                   navigateTo({
                     type: LocationType.RuleList,
                     contractID: location.contractID,
@@ -90,14 +88,16 @@ export const POC = () => {
               <Button
                 size="sm"
                 onClick={() => {
-                  if (location.SKU === null) return
+                  if (location.SKU === null || editingRules === null) return
                   const otherSKURules = rules.filter((rule) => rule.sku !== location.SKU)
                   saveRules(client, {
                     contractID: location.contractID,
                     rules: [...editingRulesBySKU, ...otherSKURules],
+                    month: editingRules.period.month,
+                    year: editingRules.period.year,
                   })
                 }}
-                disabled={editingRules === null}
+                disabled={editingRules?.rules === null}
               >
                 Save Rules
               </Button>

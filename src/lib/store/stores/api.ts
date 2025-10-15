@@ -9,7 +9,7 @@ import {
 } from '@numeric-io/fdp-api'
 import { Temporal } from '@numeric-io/temporal'
 import { ContractRateRule } from './rateCalculator/types'
-import { writeContractRateRules, writeContracts, writeEditingRules, writeEvents } from './rateCalculator/write'
+import { writeClearingRules, writeContractRateRules, writeContracts, writeEvents } from './rateCalculator/write'
 
 export async function fetchContracts(client: IBackendAPIClient | null) {
   if (!client) return console.error('Client not found')
@@ -78,13 +78,30 @@ export const runRules = async (
 
 export const saveRules = async (
   client: IBackendAPIClient | null,
-  { contractID, rules }: { contractID: string; rules: CreateRuleRequest[] }
+  {
+    contractID,
+    rules,
+    month,
+    year,
+  }: {
+    contractID: string
+    rules: CreateRuleRequest[]
+    month: number
+    year: number
+  }
 ) => {
   if (!client) return console.error('Client not found')
+  const startOfMonth = Temporal.PlainDate.from({ year, month, day: 1 })
+  const endOfMonth = startOfMonth.with({ day: startOfMonth.daysInMonth })
 
-  const rulesRes = await client.request(SaveContractRulesAPI, { contract_id: contractID, rules })
+  const rulesRes = await client.request(SaveContractRulesAPI, {
+    contract_id: contractID,
+    rules,
+    start_date: startOfMonth,
+    end_date: endOfMonth,
+  })
   if (!rulesRes || !rulesRes.ok) return console.error('No rules found')
 
   writeContractRateRules(rulesRes.data.rules)
-  writeEditingRules(null)
+  writeClearingRules()
 }

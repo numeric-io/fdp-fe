@@ -16,7 +16,7 @@ export const RuleHeader = ({ showPriority = false, rule, isExpanded = false, onC
       <div className="flex gap-4 flex-1">
         {showPriority && <div>{rule.priority}</div>}
         <div className="flex flex-col gap-1">
-          <Text>{`Rule: preview-${rule.priority}`}</Text>
+          <Text>{`Rule: Rule-${rule.priority}`}</Text>
           {/* <Text>{`RuleHeader: ${rule.id}`}</Text> */}
           {/* <Text>{`No matches yet`}</Text> */}
         </div>

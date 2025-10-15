@@ -12,7 +12,8 @@ export type SKU = APIRule['sku']
 export interface EditingRules {
   contractID: string
   sku: string
-  rules: ContractRateRule[]
+  period: { month: number; year: number }
+  rules: ContractRateRule[] | null
 }
 
 export interface RateCalculatorStore {

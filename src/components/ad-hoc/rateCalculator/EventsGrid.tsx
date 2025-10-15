@@ -3,8 +3,9 @@ import { Heading } from '@/components/ui/numeric-ui/heading'
 import { SearchField } from '@/components/ui/numeric-ui/searchField'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
 import { fetchEvents } from '@/lib/store/stores/api'
-import { useEvents } from '@/lib/store/stores/rateCalculator/getters'
+import { useEditingRules, useEvents } from '@/lib/store/stores/rateCalculator/getters'
 import type { Events } from '@/lib/store/stores/rateCalculator/types'
+import { writeEditingRulesPeriod } from '@/lib/store/stores/rateCalculator/write'
 import { SelectValue } from '@radix-ui/react-select'
 import { AllCommunityModule, ModuleRegistry, type ColDef } from 'ag-grid-enterprise'
 import { AgGridReact } from 'ag-grid-react'
@@ -22,10 +23,12 @@ export interface EventsGridProps {
   contractID?: string
 }
 
+const DEFAULT_PERIOD = { month: 8, year: 2025 }
+
 export const EventsGrid = ({ contractID }: EventsGridProps) => {
   const [query, setQuery] = useState('')
-  const [selectedMonth, setSelectedMonth] = useState(8)
-  const [selectedYear, setSelectedYear] = useState(2025)
+  const editingRules = useEditingRules()
+  const period = editingRules?.period ?? DEFAULT_PERIOD
   // const editingRules = useEditingRules()
   // TODO: scope events to contractID later
   const events = useEvents()
@@ -45,8 +48,8 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
   )
 
   useEffect(() => {
-    fetchEvents(client, { contractID, month: selectedMonth, year: selectedYear })
-  }, [client, contractID, selectedMonth, selectedYear])
+    fetchEvents(client, { contractID, month: period.month, year: period.year })
+  }, [client, contractID, period])
 
   const colDefs = useMemo<ColDef<Events>[]>(
     () => [
@@ -55,7 +58,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
         headerName: 'Rule ID',
         rowGroup: true,
         hide: true,
-        valueGetter: (params) => params.data?.rule_id ?? 'Unmatched',
+        valueGetter: (params) => params.data?.rule_id?.replace('preview-', 'Rule-') ?? 'Unmatched',
         comparator: (valueA, valueB) => {
           console.log(valueA, valueB)
           // Unmatched events should be at the bottom
@@ -95,8 +98,14 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <Heading level={3}>Events for month:</Heading>
-          <MonthSelect selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
-          <YearSelect selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+          <MonthSelect
+            selectedMonth={period?.month}
+            setSelectedMonth={(month) => writeEditingRulesPeriod({ ...period, month })}
+          />
+          <YearSelect
+            selectedYear={period?.year}
+            setSelectedYear={(year) => writeEditingRulesPeriod({ ...period, year })}
+          />
         </div>
         <SearchField query={query} setQuery={setQuery} />
       </div>

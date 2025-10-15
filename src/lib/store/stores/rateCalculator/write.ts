@@ -27,10 +27,54 @@ export const writeContractRateRules = (rules: ContractRateRule[]) => {
   })
 }
 
-export const writeEditingRules = (editingRules: EditingRules | null) => {
+export const writeClearingRules = () => {
   useGlobalStore.setState((store: Store) => {
     return produce(store, (draft) => {
-      draft.rateCalculatorStore.editingRules = editingRules
+      if (!draft.rateCalculatorStore.editingRules) return
+      draft.rateCalculatorStore.editingRules.rules = null
+    })
+  })
+}
+
+export const writeEditingRules = (editingRules: EditingRules['rules']) => {
+  useGlobalStore.setState((store: Store) => {
+    return produce(store, (draft) => {
+      if (!draft.rateCalculatorStore.editingRules) return
+      draft.rateCalculatorStore.editingRules.rules = editingRules
+    })
+  })
+}
+
+export const writeEditingRulesPeriod = (period: { month: number; year: number }) => {
+  useGlobalStore.setState((store: Store) => {
+    return produce(store, (draft) => {
+      if (!draft.rateCalculatorStore.editingRules) return
+      draft.rateCalculatorStore.editingRules.period = period
+    })
+  })
+}
+
+export const writeEditingRulesContractID = (
+  contractID: string,
+  sku: string,
+  period: { month: number; year: number }
+) => {
+  useGlobalStore.setState((store: Store) => {
+    return produce(store, (draft) => {
+      draft.rateCalculatorStore.editingRules = {
+        contractID,
+        sku,
+        period,
+        rules: null,
+      }
+    })
+  })
+}
+
+export const writeEditingRulesNull = () => {
+  useGlobalStore.setState((store: Store) => {
+    return produce(store, (draft) => {
+      draft.rateCalculatorStore.editingRules = null
     })
   })
 }
