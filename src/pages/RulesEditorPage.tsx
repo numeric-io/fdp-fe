@@ -51,10 +51,7 @@ export const RulesEditorPage = () => {
           const createRuleRequest: CreateRuleRequest = {
             contract_id: contractID,
             sku: sku,
-            conditions: {
-              op: rule.conditions.op,
-              conditions: rule.conditions.conditions,
-            },
+            andExpression: rule.andExpression,
             rate: rule.rate,
             priority: rule.priority,
           }

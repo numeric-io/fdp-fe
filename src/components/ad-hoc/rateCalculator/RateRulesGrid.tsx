@@ -38,11 +38,11 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
         valueGetter: (params) => (params.data?.rate === null ? 'Exclude' : params.data?.rate.val),
       },
       {
-        field: 'conditions',
+        field: 'andExpression',
         headerName: 'Conditions',
         flex: 1,
         valueGetter: (params) =>
-          params.data?.conditions.conditions
+          params.data?.andExpression.conditions
             .map(
               (condition) =>
                 `${condition.field} ${condition.op} ${condition.op === 'nullish' ? 'is empty' : condition.value}`

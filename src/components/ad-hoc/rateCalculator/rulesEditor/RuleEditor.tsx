@@ -11,6 +11,7 @@ import {
   ContractRateRuleConditions,
   Rate,
 } from '@/lib/store/stores/rateCalculator/types'
+import { ComparisonType, Operator, RateType } from '@numeric-io/fdp-api'
 import { Trash } from 'lucide-react'
 import { RuleHeader } from './RuleHeader'
 
@@ -33,9 +34,9 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
     <div>
       <Label>Match when</Label>
       <ConditionItems
-        conditions={rule.conditions.conditions}
+        conditions={rule.andExpression.conditions}
         keyOptions={keyOptions}
-        setConditions={(conditions) => onUpdateRule({ ...rule, conditions: { ...rule.conditions, conditions } })}
+        setConditions={(conditions) => onUpdateRule({ ...rule, andExpression: { ...rule.andExpression, conditions } })}
       />
     </div>
   )
@@ -44,7 +45,7 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
       value={rule.rate === null ? RuleBodyTab.Exclude : RuleBodyTab.Include}
       className="h-full w-full p-2"
       onValueChange={(value) => {
-        onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: 'number', val: '0' } : null })
+        onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: RateType.Number, val: '0' } : null })
       }}
     >
       <div className="flex justify-between">
@@ -105,7 +106,7 @@ const ConditionItems = ({ conditions, keyOptions, setConditions }: ConditionItem
         size="sm"
         className="flex-shrink-0 w-1/3"
         onClick={() => {
-          setConditions([...conditions, { op: 'eq', field: '', value: '', type: 'string' }])
+          setConditions([...conditions, { op: Operator.Equal, field: '', value: '', type: ComparisonType.String }])
         }}
       >
         + Add Condition
@@ -149,15 +150,25 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
         <Select
           value={condition.op}
           onValueChange={(newOp) => {
-            const value = condition.op === 'nullish' ? '' : condition.value
-            if (newOp === 'eq' || newOp === 'neq') {
-              onUpdate({ ...condition, op: newOp, type: 'string', value })
-            } else if (newOp === 'gt' || newOp === 'gte' || newOp === 'lt' || newOp === 'lte') {
-              onUpdate({ ...condition, op: newOp, type: 'number', value })
-            } else if (newOp === 'nullish') {
-              onUpdate({ ...condition, op: newOp })
-            } else {
-              return
+            const value = condition.op === Operator.Nullish ? '' : condition.value
+
+            switch (newOp) {
+              case Operator.Equal:
+              case Operator.NotEqual:
+                onUpdate({ ...condition, op: newOp, type: ComparisonType.String, value })
+                break
+              case Operator.GreaterThan:
+              case Operator.GreaterThanOrEqual:
+              case Operator.LessThan:
+              case Operator.LessThanOrEqual:
+                // TODO: support date type
+                onUpdate({ ...condition, op: newOp, type: ComparisonType.Number, value })
+                break
+              case Operator.Nullish:
+                onUpdate({ op: newOp, field: condition.field })
+                break
+              default:
+                return
             }
           }}
         >
@@ -165,16 +176,16 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
             <SelectValue>{OperatorLabelMap[condition.op] ?? condition.op}</SelectValue>
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value={'eq'}>{OperatorLabelMap.eq}</SelectItem>
-            <SelectItem value={'neq'}>{OperatorLabelMap.neq}</SelectItem>
-            <SelectItem value={'gt'}>{OperatorLabelMap.gt}</SelectItem>
-            <SelectItem value={'gte'}>{OperatorLabelMap.gte}</SelectItem>
-            <SelectItem value={'lt'}>{OperatorLabelMap.lt}</SelectItem>
-            <SelectItem value={'lte'}>{OperatorLabelMap.lte}</SelectItem>
-            <SelectItem value={'nullish'}>{OperatorLabelMap.nullish}</SelectItem>
+            <SelectItem value={Operator.Equal}>{OperatorLabelMap.eq}</SelectItem>
+            <SelectItem value={Operator.NotEqual}>{OperatorLabelMap.neq}</SelectItem>
+            <SelectItem value={Operator.GreaterThan}>{OperatorLabelMap.gt}</SelectItem>
+            <SelectItem value={Operator.GreaterThanOrEqual}>{OperatorLabelMap.gte}</SelectItem>
+            <SelectItem value={Operator.LessThan}>{OperatorLabelMap.lt}</SelectItem>
+            <SelectItem value={Operator.LessThanOrEqual}>{OperatorLabelMap.lte}</SelectItem>
+            <SelectItem value={Operator.Nullish}>{OperatorLabelMap.nullish}</SelectItem>
           </SelectContent>
         </Select>
-        {condition.op !== 'nullish' && (
+        {condition.op !== Operator.Nullish && (
           <Input
             className="w-full"
             value={condition.value}
@@ -192,28 +203,32 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
 }
 
 const RateEditor = ({ rate, onChange }: { rate: NonNullable<Rate>; onChange: (value: Rate) => void }) => {
-  const inputType = rate.t === 'number' ? 'number' : 'text'
+  const inputType = rate.t === RateType.Number ? 'number' : 'text'
   return (
     <div className="flex flex-col gap-2">
       <div className="flex gap-2">
         <Label>Rate Type:</Label>
         <RadioGroup
-          defaultValue={'number'}
+          defaultValue={RateType.Number}
           value={rate.t}
           className="flex"
           onValueChange={(value) => {
-            if (value !== 'number' && value !== 'expression') return
+            if (value !== RateType.Number && value !== RateType.Expression) return
 
-            onChange(value === 'number' ? { t: 'number', val: rate.val } : { t: 'expression', val: rate.val })
+            onChange(
+              value === RateType.Number
+                ? { t: RateType.Number, val: rate.val }
+                : { t: RateType.Expression, val: rate.val }
+            )
           }}
         >
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value={'number'} id={'number'} />
-            <Label htmlFor={'number'}>Flat Rate</Label>
+            <RadioGroupItem value={RateType.Number} id={RateType.Number} />
+            <Label htmlFor={RateType.Number}>Flat Rate</Label>
           </div>
           <div className="flex items-center space-x-2">
-            <RadioGroupItem value={'expression'} id={'expression'} />
-            <Label htmlFor={'expression'}>Rate Expression</Label>
+            <RadioGroupItem value={RateType.Expression} id={RateType.Expression} />
+            <Label htmlFor={RateType.Expression}>Rate Expression</Label>
           </div>
         </RadioGroup>
       </div>

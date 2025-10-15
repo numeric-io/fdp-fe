@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { useKeyOptionsByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { ContractRateRule, SKU } from '@/lib/store/stores/rateCalculator/types'
 import { generateShortUID } from '@/lib/utils'
-import { ComparisonType, Operator } from '@numeric-io/fdp-api'
+import { ComparisonType, Operator, RateType } from '@numeric-io/fdp-api'
 import { useState } from 'react'
 import { RuleEditor } from './RuleEditor'
 
@@ -72,11 +72,11 @@ const createDefaultRule = ({
     priority,
     sku,
     contract_id: contractID,
-    conditions: {
+    andExpression: {
       op: Operator.And,
       conditions: [
         {
-          op: 'eq',
+          op: Operator.Equal,
           field: '',
           value: '',
           type: ComparisonType.String,
@@ -84,7 +84,7 @@ const createDefaultRule = ({
       ],
     },
     rate: {
-      t: 'number',
+      t: RateType.Number,
       val: '0',
     },
   }

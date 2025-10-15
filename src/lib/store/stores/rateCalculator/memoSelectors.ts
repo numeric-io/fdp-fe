@@ -13,12 +13,12 @@ export const useEventsByContractID = (contractID: string | null): Events[] => {
   }, [events, contractID])
 }
 
-// TODO: correct this
+// TODO: correct this to use events
 export const useKeyOptionsByContractID = (contractID: string | null): string[] => {
   const rules = useContractRateRulesByContractID(contractID)
   return useMemo(() => {
     return Array.from(
-      new Set(rules.map((rule) => rule.conditions.conditions.map((condition) => condition.field)).flat())
+      new Set(rules.map((rule) => rule.andExpression.conditions.map((condition) => condition.field)).flat())
     )
   }, [rules])
 }
