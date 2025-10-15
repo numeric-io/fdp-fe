@@ -14,7 +14,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 ModuleRegistry.registerModules([AllCommunityModule])
 
 const getRulePriority = (ruleID: string | undefined): number | null => {
-  const match = ruleID?.match(/preview-(\d+)/)
+  const match = ruleID?.match(/Rule-(\d+)/)
   if (!match) return null
   return parseFloat(match[1])
 }
