@@ -32,6 +32,7 @@ export const RulesList = ({ contractID, sku, rules, updateRules }: RulesListProp
               prev.includes(rule.id) ? prev.filter((id) => id !== rule.id) : [...prev, rule.id]
             )
           }
+          onDeleteRule={() => updateRules(rules.filter((r) => r.id !== rule.id))}
           onUpdateRule={(rule) => updateRules(rules.map((r) => (r.id === rule.id ? rule : r)))}
         />
       ))}

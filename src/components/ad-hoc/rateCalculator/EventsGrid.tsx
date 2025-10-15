@@ -121,6 +121,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
           columnDefs={colDefs}
           rowData={events}
           quickFilterText={query}
+          groupDisplayType="groupRows"
           autoGroupColumnDef={{
             headerName: 'Rule ID',
             sort: 'asc',

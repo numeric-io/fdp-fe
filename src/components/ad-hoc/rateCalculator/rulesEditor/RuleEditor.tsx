@@ -11,6 +11,7 @@ import {
   ContractRateRuleConditions,
   Rate,
 } from '@/lib/store/stores/rateCalculator/types'
+import { Trash } from 'lucide-react'
 import { RuleHeader } from './RuleHeader'
 
 interface RuleEditorProps {
@@ -19,6 +20,7 @@ interface RuleEditorProps {
   keyOptions: string[]
   onClick: () => void
   onUpdateRule: (rule: ContractRateRule) => void
+  onDeleteRule: () => void
 }
 
 enum RuleBodyTab {
@@ -26,7 +28,7 @@ enum RuleBodyTab {
   Exclude = 'exclude',
 }
 
-export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule }: RuleEditorProps) => {
+export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule, onDeleteRule }: RuleEditorProps) => {
   const matchConditions = (
     <div>
       <Label>Match when</Label>
@@ -45,11 +47,15 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
         onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: 'number', val: '0' } : null })
       }}
     >
-      <TabsList>
-        <TabsTrigger value={RuleBodyTab.Include}>Include</TabsTrigger>
-        <TabsTrigger value={RuleBodyTab.Exclude}>Exclude</TabsTrigger>
-      </TabsList>
-
+      <div className="flex justify-between">
+        <TabsList>
+          <TabsTrigger value={RuleBodyTab.Include}>Include</TabsTrigger>
+          <TabsTrigger value={RuleBodyTab.Exclude}>Exclude</TabsTrigger>
+        </TabsList>
+        <Button variant="ghost" size="sm" onClick={() => onDeleteRule()}>
+          <Trash />
+        </Button>
+      </div>
       <TabsContent value={RuleBodyTab.Include}>
         <div className="flex flex-col gap-2">
           {rule.rate && <RateEditor rate={rule.rate} onChange={(rate) => onUpdateRule({ ...rule, rate })} />}
