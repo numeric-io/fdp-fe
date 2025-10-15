@@ -1,6 +1,7 @@
 import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
+import { useContract } from '@/lib/store/stores/rateCalculator/getters'
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,6 +14,11 @@ import {
 export const BreadcrumbNav = () => {
   const location = useCurrentLocation()
   const navigateTo = useNavigateTo()
+  const contract = useContract(
+    location.type === LocationType.RuleList || location.type === LocationType.RuleEditor ? location.contractID : null
+  )
+
+  const contractName = contract?.customer_name ?? 'Unknown Contract'
 
   return (
     <Breadcrumb>
@@ -40,10 +46,10 @@ export const BreadcrumbNav = () => {
                     navigateTo({ type: LocationType.RuleList, contractID: location.contractID })
                   }}
                 >
-                  {location.contractID}
+                  {contractName}
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage>{location.contractID}</BreadcrumbPage>
+                <BreadcrumbPage>{contractName}</BreadcrumbPage>
               )}
             </BreadcrumbItem>
           </>

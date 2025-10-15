@@ -8,7 +8,7 @@ export const useEvents = createSelector(getEvents)
 export const getContracts = (store: Store): Contract[] => store.rateCalculatorStore.contracts
 export const useContracts = createSelector(getContracts)
 
-export const getContract = (store: Store, contractID: string): Contract | null =>
+export const getContract = (store: Store, contractID: string | null): Contract | null =>
   store.rateCalculatorStore.contracts.find((contract) => contract.id === contractID) ?? null
 export const useContract = createSelector(getContract)
 

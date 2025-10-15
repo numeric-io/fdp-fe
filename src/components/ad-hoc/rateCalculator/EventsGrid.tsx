@@ -2,6 +2,8 @@ import { AppContext } from '@/App'
 import { Heading } from '@/components/ui/numeric-ui/heading'
 import { SearchField } from '@/components/ui/numeric-ui/searchField'
 import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
+import { LocationType } from '@/lib/routing/types'
+import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { fetchEvents } from '@/lib/store/stores/api'
 import { useEditingRules, useEvents } from '@/lib/store/stores/rateCalculator/getters'
 import type { Events } from '@/lib/store/stores/rateCalculator/types'
@@ -27,6 +29,7 @@ const DEFAULT_PERIOD = { month: 8, year: 2025 }
 
 export const EventsGrid = ({ contractID }: EventsGridProps) => {
   const [query, setQuery] = useState('')
+  const location = useCurrentLocation()
   const editingRules = useEditingRules()
   const period = editingRules?.period ?? DEFAULT_PERIOD
   // const editingRules = useEditingRules()
@@ -48,8 +51,10 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
   )
 
   useEffect(() => {
+    // Skip fetching events if we are in the rule editor because it will run rules instead
+    if (location.type === LocationType.RuleEditor) return
     fetchEvents(client, { contractID, month: period.month, year: period.year })
-  }, [client, contractID, period])
+  }, [client, contractID, location.type, period])
 
   const colDefs = useMemo<ColDef<Events>[]>(
     () => [
@@ -84,11 +89,13 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
               ? 'Excluded'
               : params.data?.evaluated_rate,
       },
-      ...Array.from(eventKeys).map((key) => ({
-        colId: key,
-        headerName: key,
-        valueGetter: (params: any) => params.data?.content[key],
-      })),
+      ...Array.from(eventKeys)
+        .map((key) => ({
+          colId: key,
+          headerName: key,
+          valueGetter: (params: any) => params.data?.content[key],
+        }))
+        .sort((a, b) => a.headerName.localeCompare(b.headerName)),
     ],
     [eventKeys]
   )

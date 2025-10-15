@@ -51,18 +51,19 @@ export const runRules = async (
   {
     contractID,
     sku,
-    startDate,
-    endDate,
+    period,
     rules,
   }: {
     contractID: string
     sku: string
-    startDate: Temporal.PlainDate
-    endDate: Temporal.PlainDate
+    period: { month: number; year: number }
     rules: CreateRuleRequest[]
   }
 ) => {
   if (!client) return console.error('Client not found')
+
+  const startDate = Temporal.PlainDate.from({ year: period.year, month: period.month, day: 1 })
+  const endDate = startDate.with({ day: startDate.daysInMonth })
 
   const rulesRes = await client.request(RunContractRulesAPI, {
     contract_id: contractID,

@@ -23,12 +23,8 @@ export const ContractGrid = ({ onSelectContract }: ContractGridProps) => {
   const colDefs = useMemo<ColDef<Contract>[]>(
     () => [
       {
-        field: 'id',
-        headerName: 'ID',
-      },
-      {
         field: 'customer_name',
-        headerName: 'Name',
+        headerName: 'Customer Name',
         flex: 1,
       },
       {

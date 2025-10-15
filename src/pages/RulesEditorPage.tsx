@@ -7,21 +7,21 @@ import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
 import { fetchRules, runRules } from '@/lib/store/stores/api'
-import { useEvents } from '@/lib/store/stores/rateCalculator/getters'
+import { useEditingRules, useEvents } from '@/lib/store/stores/rateCalculator/getters'
 import { useContractRateRulesBysku, useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { CreateRuleRequest } from '@numeric-io/fdp-api'
-import { Temporal } from '@numeric-io/temporal'
 import { useCallback, useContext, useEffect } from 'react'
 
 export const RulesEditorPage = () => {
   const location = useCurrentLocation()
   const navigateTo = useNavigateTo()
+  const period = useEditingRules()?.period
   const rules = useContractRateRulesBysku(
     location.type === LocationType.RuleEditor ? location.contractID : null,
     location.type === LocationType.RuleEditor ? location.SKU : null
   )
-  const editingRules = useEditingRulesBySKU(
+  const editingRulesBySKU = useEditingRulesBySKU(
     location.type === LocationType.RuleEditor ? location.contractID : null,
     location.type === LocationType.RuleEditor ? location.SKU : null
   )
@@ -39,14 +39,11 @@ export const RulesEditorPage = () => {
 
   const onRunRules = useCallback(
     (rules: ContractRateRule[]) => {
-      if (!contractID || !sku) return
-      const startDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 1 })
-      const endDate = Temporal.PlainDate.from({ year: 2025, month: 12, day: 31 })
+      if (!contractID || !sku || !period) return
       runRules(client, {
         contractID,
         sku,
-        startDate,
-        endDate,
+        period: period,
         rules: rules.map((rule) => {
           if (!sku) {
             throw new Error('SKU ID is required')
@@ -65,7 +62,7 @@ export const RulesEditorPage = () => {
         }),
       })
     },
-    [contractID, client, sku]
+    [contractID, sku, period, client]
   )
 
   useEffect(() => {
@@ -83,7 +80,7 @@ export const RulesEditorPage = () => {
               ? `${unmatchedEvents.length} / ${events.length} unmatched events`
               : `Congrats! All ${events.length} events are matched`}
           </Text>
-          <Button variant="outline" size="sm" onClick={() => onRunRules(editingRules)}>
+          <Button variant="outline" size="sm" onClick={() => onRunRules(editingRulesBySKU)}>
             Refresh
           </Button>
         </div>
