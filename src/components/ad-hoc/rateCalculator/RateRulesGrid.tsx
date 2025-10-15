@@ -26,7 +26,11 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
         headerName: 'SKU',
         rowGroup: true,
       },
-      { field: 'rate', headerName: 'Rate' },
+      {
+        field: 'rate',
+        headerName: 'Rate',
+        valueGetter: (params) => (params.data?.rate === null ? 'Exclude' : params.data?.rate.val),
+      },
       { colId: 'actions', headerName: '', cellRenderer: ActionsCellRenderer },
     ],
     []
