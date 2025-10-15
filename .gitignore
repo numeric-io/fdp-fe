@@ -17,4 +17,8 @@ dist/
 
 fdp-fe-*.tgz
 .env
-.yarn/
+
+# yarn
+.yarn/*
+# plugins must be checked into version control for some reason?
+!.yarn/plugins
