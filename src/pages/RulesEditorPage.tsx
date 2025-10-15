@@ -8,14 +8,19 @@ import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
 import { fetchRules, runRules } from '@/lib/store/stores/api'
 import { useEvents } from '@/lib/store/stores/rateCalculator/getters'
-import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
+import { useContractRateRulesBysku, useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
+import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { CreateRuleRequest } from '@numeric-io/fdp-api'
 import { Temporal } from '@numeric-io/temporal'
-import { useContext, useEffect } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
 
 export const RulesEditorPage = () => {
   const location = useCurrentLocation()
   const navigateTo = useNavigateTo()
+  const rules = useContractRateRulesBysku(
+    location.type === LocationType.RuleEditor ? location.contractID : null,
+    location.type === LocationType.RuleEditor ? location.SKU : null
+  )
   const editingRules = useEditingRulesBySKU(
     location.type === LocationType.RuleEditor ? location.contractID : null,
     location.type === LocationType.RuleEditor ? location.SKU : null
@@ -32,6 +37,40 @@ export const RulesEditorPage = () => {
     fetchRules(client, contractID)
   }, [client, contractID])
 
+  const onRunRules = useCallback(
+    (rules: ContractRateRule[]) => {
+      if (!contractID) return
+      const startDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 1 })
+      const endDate = Temporal.PlainDate.from({ year: 2025, month: 12, day: 31 })
+      runRules(client, {
+        contractID,
+        startDate,
+        endDate,
+        rules: rules.map((rule) => {
+          if (!sku) {
+            throw new Error('SKU ID is required')
+          }
+          const createRuleRequest: CreateRuleRequest = {
+            contract_id: contractID,
+            sku: sku,
+            conditions: {
+              op: rule.conditions.op,
+              conditions: rule.conditions.conditions,
+            },
+            rate: rule.rate,
+            priority: rule.priority,
+          }
+          return createRuleRequest
+        }),
+      })
+    },
+    [contractID, client, sku]
+  )
+
+  useEffect(() => {
+    onRunRules(rules)
+  }, [contractID, rules, onRunRules])
+
   if (!contractID) return null
 
   return (
@@ -43,35 +82,7 @@ export const RulesEditorPage = () => {
               ? `${unmatchedEvents.length} / ${events.length} unmatched events`
               : 'Congrats! All events are matched'}
           </Text>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const startDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 1 })
-              const endDate = Temporal.PlainDate.from({ year: 2025, month: 12, day: 31 })
-              runRules(client, {
-                contractID,
-                startDate,
-                endDate,
-                rules: editingRules.map((rule) => {
-                  if (!sku) {
-                    throw new Error('SKU ID is required')
-                  }
-                  const createRuleRequest: CreateRuleRequest = {
-                    contract_id: contractID,
-                    sku: sku,
-                    conditions: {
-                      op: rule.conditions.op,
-                      conditions: rule.conditions.conditions,
-                    },
-                    rate: rule.rate,
-                    priority: rule.priority,
-                  }
-                  return createRuleRequest
-                }),
-              })
-            }}
-          >
+          <Button variant="outline" size="sm" onClick={() => onRunRules(editingRules)}>
             Refresh
           </Button>
         </div>

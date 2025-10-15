@@ -12,6 +12,12 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 
 ModuleRegistry.registerModules([AllCommunityModule])
 
+const getRulePriority = (ruleID: string | undefined): number | null => {
+  const match = ruleID?.match(/preview-(\d+)/)
+  if (!match) return null
+  return parseFloat(match[1])
+}
+
 export interface EventsGridProps {
   contractID?: string
 }
@@ -20,6 +26,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
   const [query, setQuery] = useState('')
   const [selectedMonth, setSelectedMonth] = useState(8)
   const [selectedYear, setSelectedYear] = useState(2025)
+  // const editingRules = useEditingRules()
   // TODO: scope events to contractID later
   const events = useEvents()
   const { client } = useContext(AppContext)
@@ -43,10 +50,28 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
 
   const colDefs = useMemo<ColDef<Events>[]>(
     () => [
+      {
+        field: 'rule_id',
+        headerName: 'Rule ID',
+        rowGroup: true,
+        hide: true,
+        valueGetter: (params) => params.data?.rule_id ?? 'Unmatched',
+        comparator: (valueA, valueB) => {
+          console.log(valueA, valueB)
+          // Unmatched events should be at the bottom
+          if (valueA === 'Unmatched') return 1
+          if (valueB === 'Unmatched') return -1
+          // Otherwise, sort by rule ID
+          const priorityA = getRulePriority(valueA)
+          const priorityB = getRulePriority(valueB)
+          if (priorityA === null) return 1
+          if (priorityB === null) return -1
+          return priorityA - priorityB
+        },
+      },
       { field: 'billing_record_eid', headerName: 'ID' },
       { field: 'contract_id', headerName: 'Contract ID' },
-      { field: 'rule_id', headerName: 'Rule ID' },
-      { field: 'rate', headerName: 'Rate' },
+      { field: 'evaluated_rate', headerName: 'Rate' },
       ...Array.from(eventKeys).map((key) => ({
         colId: key,
         headerName: key,
@@ -67,7 +92,27 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
         <SearchField query={query} setQuery={setQuery} />
       </div>
       <div className="flex-1">
-        <AgGridReact columnDefs={colDefs} rowData={events} quickFilterText={query} />
+        <AgGridReact
+          columnDefs={colDefs}
+          rowData={events}
+          quickFilterText={query}
+          autoGroupColumnDef={{
+            headerName: 'Rule ID',
+            sort: 'asc',
+            comparator: (valueA, valueB) => {
+              // Unmatched events should be at the bottom
+              if (valueA === 'Unmatched') return 1
+              if (valueB === 'Unmatched') return -1
+              // Otherwise, sort by rule ID
+              const priorityA = getRulePriority(valueA)
+              const priorityB = getRulePriority(valueB)
+              if (priorityA === null) return 1
+              if (priorityB === null) return -1
+              return priorityA - priorityB
+            },
+          }}
+          groupDefaultExpanded={-1}
+        />
       </div>
     </div>
   )
