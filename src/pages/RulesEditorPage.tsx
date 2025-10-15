@@ -39,11 +39,12 @@ export const RulesEditorPage = () => {
 
   const onRunRules = useCallback(
     (rules: ContractRateRule[]) => {
-      if (!contractID) return
+      if (!contractID || !sku) return
       const startDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 1 })
       const endDate = Temporal.PlainDate.from({ year: 2025, month: 12, day: 31 })
       runRules(client, {
         contractID,
+        sku,
         startDate,
         endDate,
         rules: rules.map((rule) => {
@@ -80,7 +81,7 @@ export const RulesEditorPage = () => {
           <Text>
             {unmatchedEvents.length
               ? `${unmatchedEvents.length} / ${events.length} unmatched events`
-              : 'Congrats! All events are matched'}
+              : `Congrats! All ${events.length} events are matched`}
           </Text>
           <Button variant="outline" size="sm" onClick={() => onRunRules(editingRules)}>
             Refresh

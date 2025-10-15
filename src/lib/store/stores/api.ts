@@ -49,15 +49,23 @@ export const runRules = async (
   client: IBackendAPIClient | null,
   {
     contractID,
+    sku,
     startDate,
     endDate,
     rules,
-  }: { contractID: string; startDate: Temporal.PlainDate; endDate: Temporal.PlainDate; rules: CreateRuleRequest[] }
+  }: {
+    contractID: string
+    sku: string
+    startDate: Temporal.PlainDate
+    endDate: Temporal.PlainDate
+    rules: CreateRuleRequest[]
+  }
 ) => {
   if (!client) return console.error('Client not found')
 
   const rulesRes = await client.request(RunContractRulesAPI, {
     contract_id: contractID,
+    sku,
     rules,
     start_date: startDate,
     end_date: endDate,
