@@ -71,7 +71,16 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
       },
       { field: 'billing_record_eid', headerName: 'ID' },
       { field: 'contract_id', headerName: 'Contract ID' },
-      { field: 'evaluated_rate', headerName: 'Rate' },
+      {
+        field: 'evaluated_rate',
+        headerName: 'Rate',
+        valueGetter: (params) =>
+          params.data?.rule_id === null
+            ? 'Unmatched'
+            : params.data?.evaluated_rate === null
+              ? 'Excluded'
+              : params.data?.evaluated_rate,
+      },
       ...Array.from(eventKeys).map((key) => ({
         colId: key,
         headerName: key,

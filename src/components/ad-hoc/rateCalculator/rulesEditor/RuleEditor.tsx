@@ -42,7 +42,7 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
       value={rule.rate === null ? RuleBodyTab.Exclude : RuleBodyTab.Include}
       className="h-full w-full p-2"
       onValueChange={(value) => {
-        onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: 'number', val: '' } : null })
+        onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: 'number', val: '0' } : null })
       }}
     >
       <TabsList>
