@@ -6,12 +6,12 @@ import { Text } from '@/components/ui/numeric-ui/text'
 import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
-import { runRules } from '@/lib/store/stores/api'
+import { fetchRules, runRules } from '@/lib/store/stores/api'
 import { useEvents } from '@/lib/store/stores/rateCalculator/getters'
 import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { CreateRuleRequest } from '@numeric-io/fdp-api'
 import { Temporal } from '@numeric-io/temporal'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 
 export const RulesEditorPage = () => {
   const location = useCurrentLocation()
@@ -24,9 +24,16 @@ export const RulesEditorPage = () => {
   const { client } = useContext(AppContext)
   const unmatchedEvents = events.filter((event) => event.rule_id === null)
 
-  if (location.type !== LocationType.RuleEditor) return null
+  const contractID = location.type === LocationType.RuleEditor ? location.contractID : null
+  const sku = location.type === LocationType.RuleEditor ? location.SKU : null
 
-  const { contractID, SKU: sku } = location
+  useEffect(() => {
+    if (!contractID) return
+    fetchRules(client, contractID)
+  }, [client, contractID])
+
+  if (!contractID || !sku) return null
+
   return (
     <div className="h-full flex gap-2">
       <div className="flex-1 flex flex-col gap-2">
