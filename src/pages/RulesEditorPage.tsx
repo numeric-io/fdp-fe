@@ -1,3 +1,4 @@
+import { AppContext } from '@/App'
 import { EventsGrid } from '@/components/ad-hoc/rateCalculator/EventsGrid'
 import { RulesEditor } from '@/components/ad-hoc/rateCalculator/rulesEditor/RulesEditor'
 import { Button } from '@/components/ui/button'
@@ -5,17 +6,27 @@ import { Text } from '@/components/ui/numeric-ui/text'
 import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
+import { runRules } from '@/lib/store/stores/api'
 import { useEvents } from '@/lib/store/stores/rateCalculator/getters'
+import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
+import { CreateRuleRequest } from '@numeric-io/fdp-api'
+import { Temporal } from '@numeric-io/temporal'
+import { useContext } from 'react'
 
 export const RulesEditorPage = () => {
   const location = useCurrentLocation()
   const navigateTo = useNavigateTo()
+  const editingRules = useEditingRulesBySKU(
+    location.type === LocationType.RuleEditor ? location.contractID : null,
+    location.type === LocationType.RuleEditor ? location.SKU : null
+  )
   const events = useEvents()
+  const { client } = useContext(AppContext)
   const unmatchedEvents = events.filter((event) => event.rule_id === null)
 
   if (location.type !== LocationType.RuleEditor) return null
 
-  const { contractID, SKUID } = location
+  const { contractID, SKU: sku } = location
   return (
     <div className="h-full flex gap-2">
       <div className="flex-1 flex flex-col gap-2">
@@ -29,9 +40,28 @@ export const RulesEditorPage = () => {
             variant="outline"
             size="sm"
             onClick={() => {
-              navigateTo({
-                type: LocationType.RuleList,
+              const startDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 1 })
+              const endDate = Temporal.PlainDate.from({ year: 2025, month: 12, day: 31 })
+              runRules(client, {
                 contractID,
+                startDate,
+                endDate,
+                rules: editingRules.map((rule) => {
+                  if (!sku) {
+                    throw new Error('SKU ID is required')
+                  }
+                  const createRuleRequest: CreateRuleRequest = {
+                    contract_id: contractID,
+                    sku: sku,
+                    conditions: {
+                      op: rule.conditions.op,
+                      conditions: rule.conditions.conditions,
+                    },
+                    rate: rule.rate,
+                    priority: rule.priority,
+                  }
+                  return createRuleRequest
+                }),
               })
             }}
           >
@@ -43,12 +73,12 @@ export const RulesEditorPage = () => {
       <div className="flex-shrink-0">
         <RulesEditor
           contractID={contractID}
-          skuID={SKUID}
-          onSelectSKU={(newSKUID) => {
+          sku={sku}
+          onSelectSKU={(newsku) => {
             navigateTo({
               type: LocationType.RuleEditor,
               contractID,
-              SKUID: newSKUID,
+              SKU: newsku,
             })
           }}
         />

@@ -30,13 +30,6 @@ export const useSKUsByContractID = (contractID: string): SKU[] => {
   }, [contract])
 }
 
-export const useSKUByID = (contractID: string, skuID: string | null): SKU | null => {
-  const contract = useSKUsByContractID(contractID)
-  return useMemo(() => {
-    return contract.find((sku) => sku.id === skuID) ?? null
-  }, [contract, skuID])
-}
-
 export const useContractRateRulesByContractID = (contractID: string | null): ContractRateRule[] => {
   const rateRules = useContractRateRules()
   return useMemo(() => {
@@ -47,24 +40,24 @@ export const useContractRateRulesByContractID = (contractID: string | null): Con
   }, [rateRules, contractID])
 }
 
-export const useContractRateRulesBySKUID = (contractID: string | null, skuID: string | null): ContractRateRule[] => {
+export const useContractRateRulesBysku = (contractID: string | null, sku: string | null): ContractRateRule[] => {
   const rateRules = useContractRateRulesByContractID(contractID)
 
   return useMemo(() => {
-    if (skuID === null) {
+    if (sku === null) {
       return rateRules
     }
-    return rateRules.filter((rule) => rule.sku.id === skuID)
-  }, [rateRules, skuID])
+    return rateRules.filter((rule) => rule.sku === sku)
+  }, [rateRules, sku])
 }
 
-export const useEditingRulesBySKUID = (contractID: string | null, skuID: string | null): ContractRateRule[] => {
+export const useEditingRulesBySKU = (contractID: string | null, sku: string | null): ContractRateRule[] => {
   const editingRules = useEditingRules()
-  const contractRateRules = useContractRateRulesBySKUID(contractID, skuID)
+  const contractRateRules = useContractRateRulesBysku(contractID, sku)
   return useMemo(() => {
-    if (editingRules !== null && (editingRules.contractID !== contractID || editingRules.skuID !== skuID)) {
+    if (editingRules !== null && (editingRules.contractID !== contractID || editingRules.sku !== sku)) {
       return []
     }
     return sortRules([...(editingRules?.rules ?? contractRateRules)])
-  }, [editingRules, contractID, skuID, contractRateRules])
+  }, [editingRules, contractID, sku, contractRateRules])
 }

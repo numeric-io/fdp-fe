@@ -31,8 +31,8 @@ export const locationToPath = (location: Location, basePath: string) => {
     params.set(SearchParamKey.ContractID, location.contractID)
   }
 
-  if (location.type === LocationType.RuleEditor && location.SKUID) {
-    params.set(SearchParamKey.SKUID, location.SKUID)
+  if (location.type === LocationType.RuleEditor && location.SKU) {
+    params.set(SearchParamKey.SKU, location.SKU)
   }
 
   const searchString = params ? `?${new URLSearchParams(params).toString()}` : ''

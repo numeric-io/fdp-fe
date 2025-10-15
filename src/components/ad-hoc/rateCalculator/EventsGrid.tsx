@@ -24,6 +24,19 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
   const events = useEvents()
   const { client } = useContext(AppContext)
 
+  const eventKeys = useMemo(
+    () =>
+      events.reduce<Set<string>>((acc, event) => {
+        const keys = Object.keys(event.content)
+        keys.forEach((key) => {
+          if (!(event.content as Record<string, unknown>)[key]) return
+          acc.add(key)
+        })
+        return acc
+      }, new Set()),
+    [events]
+  )
+
   useEffect(() => {
     fetchEvents(client, { contractID, month: selectedMonth, year: selectedYear })
   }, [client, contractID, selectedMonth, selectedYear])
@@ -33,15 +46,14 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
       { field: 'billing_record_eid', headerName: 'ID' },
       { field: 'contract_id', headerName: 'Contract ID' },
       { field: 'rule_id', headerName: 'Rule ID' },
-      {
-        field: 'content',
-        headerName: 'Content',
-        flex: 1,
-        valueGetter: (params) => JSON.stringify(params.data?.content),
-      },
       { field: 'rate', headerName: 'Rate' },
+      ...Array.from(eventKeys).map((key) => ({
+        colId: key,
+        headerName: key,
+        valueGetter: (params: any) => params.data?.content[key],
+      })),
     ],
-    []
+    [eventKeys]
   )
 
   return (

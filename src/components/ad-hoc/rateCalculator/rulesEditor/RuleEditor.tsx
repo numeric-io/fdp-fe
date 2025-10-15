@@ -193,7 +193,7 @@ const RateEditor = ({ rate, onChange }: { rate: Rate; onChange: (value: Rate) =>
         <Label>Rate Type:</Label>
         <RadioGroup
           defaultValue={'number'}
-          value={rate.t === 'number' ? 'number' : 'expression'}
+          value={rate.t}
           className="flex"
           onValueChange={(value) => {
             if (value !== 'number' && value !== 'expression') return

@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@ag-grid-community/styles": "^32.3.9",
-    "@numeric-io/fdp-api": "0.0.36",
+    "@numeric-io/fdp-api": "0.0.38",
     "@numeric-io/result": "^1.0.3",
     "@radix-ui/react-dialog": "^1.1.15",
     "@radix-ui/react-popover": "^1.1.15",

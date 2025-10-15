@@ -11,7 +11,7 @@ export type SKU = APIRule['sku']
 
 export interface EditingRules {
   contractID: string
-  skuID: string
+  sku: string
   rules: ContractRateRule[]
 }
 
@@ -19,7 +19,7 @@ export interface RateCalculatorStore {
   events: APIBillingRecord[]
   contracts: Contract[]
   rules: ContractRateRule[]
-  // Only one set (contractID, skuID) of editing rules is stored at a time
+  // Only one set (contractID, sku) of editing rules is stored at a time
   editingRules: EditingRules | null
 }
 

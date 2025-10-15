@@ -1,5 +1,11 @@
 import { IBackendAPIClient } from '@/api-client/IBackendAPIClient'
-import { GetBillingRecordsAPI, GetContractRulesAPI, GetContractsAPI } from '@numeric-io/fdp-api'
+import {
+  CreateRuleRequest,
+  GetBillingRecordsAPI,
+  GetContractRulesAPI,
+  GetContractsAPI,
+  RunContractRulesAPI,
+} from '@numeric-io/fdp-api'
 import { Temporal } from '@numeric-io/temporal'
 import { ContractRateRule } from './rateCalculator/types'
 import { writeContractRateRules, writeContracts, writeEvents } from './rateCalculator/write'
@@ -37,4 +43,26 @@ export async function fetchEvents(
   })
   if (!eventsRes || !eventsRes.ok) return console.error('No events found')
   writeEvents(eventsRes.data.billing_records)
+}
+
+export const runRules = async (
+  client: IBackendAPIClient | null,
+  {
+    contractID,
+    startDate,
+    endDate,
+    rules,
+  }: { contractID: string; startDate: Temporal.PlainDate; endDate: Temporal.PlainDate; rules: CreateRuleRequest[] }
+) => {
+  if (!client) return console.error('Client not found')
+
+  const rulesRes = await client.request(RunContractRulesAPI, {
+    contract_id: contractID,
+    rules,
+    start_date: startDate,
+    end_date: endDate,
+  })
+  if (!rulesRes || !rulesRes.ok) return console.error('No rules found')
+
+  writeEvents(rulesRes.data.billing_records)
 }

@@ -1,6 +1,6 @@
 import { createSelector } from '../../createSelector'
 import type { Store } from '../../types'
-import type { Contract, ContractRateRule, EditingRules, Events, SKU } from './types'
+import type { Contract, ContractRateRule, EditingRules, Events } from './types'
 
 export const getEvents = (store: Store): Events[] => store.rateCalculatorStore.events
 export const useEvents = createSelector(getEvents)
@@ -17,7 +17,3 @@ export const useContractRateRules = createSelector(getContractRateRules)
 
 export const getEditingRules = (store: Store): EditingRules | null => store.rateCalculatorStore.editingRules
 export const useEditingRules = createSelector(getEditingRules)
-
-export const getSKUByID = (store: Store, contractID: string, skuID: string | null): SKU | null =>
-  getContract(store, contractID)?.skus.find((sku) => sku.id === skuID) ?? null
-export const useSKUByID = createSelector(getSKUByID)

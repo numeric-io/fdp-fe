@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters'
 import { useKeyOptionsByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { ContractRateRule, SKU } from '@/lib/store/stores/rateCalculator/types'
 import { generateShortUID } from '@/lib/utils'
@@ -9,13 +8,12 @@ import { RuleEditor } from './RuleEditor'
 
 interface RulesListProps {
   contractID: string
-  skuID: string | null
+  sku: string | null
   rules: ContractRateRule[]
   updateRules: (rules: ContractRateRule[]) => void
 }
 
-export const RulesList = ({ contractID, skuID, rules, updateRules }: RulesListProps) => {
-  const sku = useSKUByID(contractID, skuID)
+export const RulesList = ({ contractID, sku, rules, updateRules }: RulesListProps) => {
   const keyOptions = useKeyOptionsByContractID(contractID)
   const [expandedRuleIDs, setExpandedRuleIDs] = useState<string[]>([])
   if (!sku) {
@@ -77,7 +75,7 @@ const createDefaultRule = ({
       op: Operator.And,
       conditions: [
         {
-          op: 'equal',
+          op: 'eq',
           field: '',
           value: '',
           type: ComparisonType.String,

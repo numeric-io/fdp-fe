@@ -1,4 +1,4 @@
-export const BASE_PATH = '/fdp';
+export const BASE_PATH = '/fdp'
 
 export enum ModuleName {
   Contract = 'contract',
@@ -10,7 +10,7 @@ export enum ModuleTabName {
 
 export enum SearchParamKey {
   ContractID = 'contract_id',
-  SKUID = 'sku_id',
+  SKU = 'sku',
 }
 
 export enum LocationType {
@@ -21,14 +21,14 @@ export enum LocationType {
 
 export type Location =
   | {
-      type: LocationType.ContractList;
+      type: LocationType.ContractList
     }
   | {
-      type: LocationType.RuleList;
-      contractID: string;
+      type: LocationType.RuleList
+      contractID: string
     }
   | {
-      type: LocationType.RuleEditor;
-      contractID: string;
-      SKUID: string | null;
-    };
+      type: LocationType.RuleEditor
+      contractID: string
+      SKU: string | null
+    }

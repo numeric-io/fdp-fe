@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { LocationType } from '@/lib/routing/types'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
-import { useSKUByID } from '@/lib/store/stores/rateCalculator/getters'
 import { useContractRateRulesByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import type { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { type ColDef, type ICellRendererParams } from 'ag-grid-enterprise'
@@ -23,10 +22,9 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
     () => [
       { field: 'id', headerName: 'ID', flex: 1 },
       {
-        field: 'sku.id',
+        field: 'sku',
         headerName: 'SKU',
         rowGroup: true,
-        cellRenderer: SKUCellRenderer,
       },
       { field: 'rate', headerName: 'Rate' },
       { colId: 'actions', headerName: '', cellRenderer: ActionsCellRenderer },
@@ -52,9 +50,6 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
         }}
         groupDisplayType="groupRows"
         groupDefaultExpanded={-1}
-        groupRowRendererParams={{
-          innerRenderer: SKUCellRenderer,
-        }}
         context={context}
       />
     </div>
@@ -68,23 +63,18 @@ const ActionsCellRenderer = (params: ICellRendererParams<ContractRateRule, strin
       variant="outline"
       size="sm"
       onClick={() => {
-        if (!params.context?.contractID || !params.data?.sku.id) {
+        if (!params.context?.contractID || !params.data?.sku) {
           console.error('No contract ID or SKU ID provided')
           return
         }
         navigateTo({
           type: LocationType.RuleEditor,
           contractID: params.context?.contractID,
-          SKUID: params.data?.sku.id,
+          SKU: params.data?.sku,
         })
       }}
     >
       Edit
     </Button>
   )
-}
-
-const SKUCellRenderer = (params: ICellRendererParams<unknown, string, RateRulesGridContext>) => {
-  const sku = useSKUByID(params.context?.contractID, params.value ?? null)
-  return <div>{sku?.name ?? params.value}</div>
 }

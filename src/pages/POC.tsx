@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
-import { useEditingRulesBySKUID } from '@/lib/store/stores/rateCalculator/memoSelectors'
+import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { writeEditingRules } from '@/lib/store/stores/rateCalculator/write'
 import {
   AllCommunityModule,
@@ -33,9 +33,9 @@ export const POC = () => {
   const location = useCurrentLocation()
   const navigateTo = useNavigateTo()
   // TODO: no need to rerender when this changes, move this into Button handler
-  const editingRules = useEditingRulesBySKUID(
+  const editingRules = useEditingRulesBySKU(
     location.type === LocationType.RuleEditor ? location.contractID : null,
-    location.type === LocationType.RuleEditor ? location.SKUID : null
+    location.type === LocationType.RuleEditor ? location.SKU : null
   )
 
   const renderPage = (): React.ReactNode => {
@@ -60,7 +60,7 @@ export const POC = () => {
               variant="default"
               size="sm"
               onClick={() => {
-                navigateTo({ type: LocationType.RuleEditor, contractID: location.contractID, SKUID: null })
+                navigateTo({ type: LocationType.RuleEditor, contractID: location.contractID, SKU: null })
               }}
             >
               Add Rule
@@ -84,11 +84,11 @@ export const POC = () => {
               <Button
                 size="sm"
                 onClick={() => {
-                  if (location.SKUID === null) return
+                  if (location.SKU === null) return
                   console.log('saving editing rules', editingRules)
                   writeEditingRules({
                     contractID: location.contractID,
-                    skuID: location.SKUID,
+                    sku: location.SKU,
                     rules: editingRules,
                   })
                 }}
