@@ -1,8 +1,11 @@
+import { AppContext } from '@/App'
 import { BreadcrumbNav } from '@/components/ad-hoc/rateCalculator/BreadcrumbNav'
 import { Button } from '@/components/ui/button'
 import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
+import { saveRules } from '@/lib/store/stores/api'
+import { useContractRateRules, useEditingRules } from '@/lib/store/stores/rateCalculator/getters'
 import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import { writeEditingRules } from '@/lib/store/stores/rateCalculator/write'
 import {
@@ -15,6 +18,7 @@ import {
   RowGroupingPanelModule,
   ValidationModule,
 } from 'ag-grid-enterprise'
+import { useContext } from 'react'
 import { ContractsPage } from './ContractsPage'
 import { RulesEditorPage } from './RulesEditorPage'
 import { RulesPage } from './RulesPage'
@@ -32,11 +36,13 @@ ModuleRegistry.registerModules([
 export const POC = () => {
   const location = useCurrentLocation()
   const navigateTo = useNavigateTo()
+  const { client } = useContext(AppContext)
+  const contractID = location.type === LocationType.RuleEditor ? location.contractID : null
+  const sku = location.type === LocationType.RuleEditor ? location.SKU : null
+  const rules = useContractRateRules()
   // TODO: no need to rerender when this changes, move this into Button handler
-  const editingRules = useEditingRulesBySKU(
-    location.type === LocationType.RuleEditor ? location.contractID : null,
-    location.type === LocationType.RuleEditor ? location.SKU : null
-  )
+  const editingRulesBySKU = useEditingRulesBySKU(contractID, sku)
+  const editingRules = useEditingRules()
 
   const renderPage = (): React.ReactNode => {
     switch (location.type) {
@@ -85,13 +91,13 @@ export const POC = () => {
                 size="sm"
                 onClick={() => {
                   if (location.SKU === null) return
-                  console.log('saving editing rules', editingRules)
-                  writeEditingRules({
+                  const otherSKURules = rules.filter((rule) => rule.sku !== location.SKU)
+                  saveRules(client, {
                     contractID: location.contractID,
-                    sku: location.SKU,
-                    rules: editingRules,
+                    rules: [...editingRulesBySKU, ...otherSKURules],
                   })
                 }}
+                disabled={editingRules === null}
               >
                 Save Rules
               </Button>
