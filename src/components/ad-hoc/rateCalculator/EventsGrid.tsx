@@ -82,7 +82,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
       ...HIGH_PRIORITY_KEYS.map((key) => ({
         field: `content.${key}` as any,
         headerName: key,
-        valueGetter: (params) => (params.data?.content as any)?.[key],
+        valueGetter: (params: any) => (params.data?.content as any)?.[key],
       })),
       {
         field: 'evaluated_rate',
