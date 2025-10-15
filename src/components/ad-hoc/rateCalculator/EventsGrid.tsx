@@ -21,6 +21,8 @@ const getRulePriority = (ruleID: string | undefined): number | null => {
   return parseFloat(match[1])
 }
 
+const HIGH_PRIORITY_KEYS = ['Salesforce_SKU', 'AGREEMENT_CHANNEL', 'BILLABLE_EVENT_TYPE']
+
 export interface EventsGridProps {
   contractID?: string
 }
@@ -77,8 +79,11 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
           return priorityA - priorityB
         },
       },
-      { field: 'billing_record_eid', headerName: 'ID' },
-      { field: 'contract_id', headerName: 'Contract ID' },
+      ...HIGH_PRIORITY_KEYS.map((key) => ({
+        field: `content.${key}` as any,
+        headerName: key,
+        valueGetter: (params) => (params.data?.content as any)?.[key],
+      })),
       {
         field: 'evaluated_rate',
         headerName: 'Rate',
@@ -90,6 +95,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
               : params.data?.evaluated_rate,
       },
       ...Array.from(eventKeys)
+        .filter((key) => !HIGH_PRIORITY_KEYS.includes(key))
         .map((key) => ({
           colId: key,
           headerName: key,
