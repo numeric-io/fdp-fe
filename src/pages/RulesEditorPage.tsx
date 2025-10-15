@@ -32,7 +32,7 @@ export const RulesEditorPage = () => {
     fetchRules(client, contractID)
   }, [client, contractID])
 
-  if (!contractID || !sku) return null
+  if (!contractID) return null
 
   return (
     <div className="h-full flex gap-2">

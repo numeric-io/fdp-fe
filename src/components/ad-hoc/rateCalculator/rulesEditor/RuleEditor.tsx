@@ -39,10 +39,10 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
   )
   const body = (
     <Tabs
-      defaultValue={RuleBodyTab.Include}
+      value={rule.rate === null ? RuleBodyTab.Exclude : RuleBodyTab.Include}
       className="h-full w-full p-2"
       onValueChange={(value) => {
-        onUpdateRule({ ...rule, rate: { t: 'number', val: value === RuleBodyTab.Include ? '' : '0' } })
+        onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: 'number', val: '' } : null })
       }}
     >
       <TabsList>
@@ -52,7 +52,7 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
 
       <TabsContent value={RuleBodyTab.Include}>
         <div className="flex flex-col gap-2">
-          <RateEditor rate={rule.rate} onChange={(rate) => onUpdateRule({ ...rule, rate })} />
+          {rule.rate && <RateEditor rate={rule.rate} onChange={(rate) => onUpdateRule({ ...rule, rate })} />}
           {matchConditions}
         </div>
       </TabsContent>
@@ -185,7 +185,7 @@ const ConditionItem = ({ condition, keyOptions, onUpdate, onDelete }: ConditionI
   )
 }
 
-const RateEditor = ({ rate, onChange }: { rate: Rate; onChange: (value: Rate) => void }) => {
+const RateEditor = ({ rate, onChange }: { rate: NonNullable<Rate>; onChange: (value: Rate) => void }) => {
   const inputType = rate.t === 'number' ? 'number' : 'text'
   return (
     <div className="flex flex-col gap-2">
