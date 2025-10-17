@@ -1,7 +1,7 @@
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types';
+import { APIRule } from '@numeric-io/fdp-api'
 
-export const RULE_HEADER_HEIGHT = 68;
+export const RULE_HEADER_HEIGHT = 68
 
-export const sortRules = (rules: ContractRateRule[]) => {
-  return rules.sort((a, b) => a.priority - b.priority);
-};
+export const sortRules = (rules: APIRule[]) => {
+  return rules.sort((a, b) => a.priority - b.priority)
+}

@@ -9,8 +9,7 @@ import { useNavigateTo } from '@/lib/routing/useNavigateTo'
 import { fetchRules, runRules } from '@/lib/store/stores/api'
 import { useEditingRules, useEvents } from '@/lib/store/stores/rateCalculator/getters'
 import { useContractRateRulesBysku, useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
-import { CreateRuleRequest } from '@numeric-io/fdp-api'
+import { APIRule } from '@numeric-io/fdp-api'
 import { useCallback, useContext, useEffect } from 'react'
 
 export const RulesEditorPage = () => {
@@ -27,7 +26,7 @@ export const RulesEditorPage = () => {
   )
   const events = useEvents()
   const { client } = useContext(AppContext)
-  const unmatchedEvents = events.filter((event) => event.rule_id === null)
+  const unmatchedEvents = events.filter((event) => event.matched_rule === null)
 
   const contractID = location.type === LocationType.RuleEditor ? location.contractID : null
   const sku = location.type === LocationType.RuleEditor ? location.SKU : null
@@ -38,25 +37,13 @@ export const RulesEditorPage = () => {
   }, [client, contractID])
 
   const onRunRules = useCallback(
-    (rules: ContractRateRule[]) => {
+    (rules: APIRule[]) => {
       if (!contractID || !sku || !period) return
       runRules(client, {
         contractID,
         sku,
         period: period,
-        rules: rules.map((rule) => {
-          if (!sku) {
-            throw new Error('SKU ID is required')
-          }
-          const createRuleRequest: CreateRuleRequest = {
-            contract_id: contractID,
-            sku: sku,
-            andExpression: rule.andExpression,
-            rate: rule.rate,
-            priority: rule.priority,
-          }
-          return createRuleRequest
-        }),
+        rules,
       })
     },
     [contractID, sku, period, client]

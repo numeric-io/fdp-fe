@@ -21,7 +21,7 @@ export const RateRulesGrid = ({ contractID }: RateRulesGridProps) => {
   const colDefs = useMemo<ColDef<ContractRateRule>[]>(
     () => [
       {
-        field: 'sku',
+        colId: 'sku',
         headerName: 'SKU',
         valueGetter: (params) => `SKU: ${params.data?.sku}`,
         rowGroup: true,

@@ -5,22 +5,17 @@ import { Label } from '@/components/ui/numeric-ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  ContractRateRule,
-  ContractRateRuleCondition,
-  ContractRateRuleConditions,
-  Rate,
-} from '@/lib/store/stores/rateCalculator/types'
-import { ComparisonType, Operator, RateType } from '@numeric-io/fdp-api'
+import { ContractRateRuleCondition, ContractRateRuleConditions, Rate } from '@/lib/store/stores/rateCalculator/types'
+import { APIRule, ComparisonType, Operator, RateType } from '@numeric-io/fdp-api'
 import { Trash } from 'lucide-react'
 import { RuleHeader } from './RuleHeader'
 
 interface RuleEditorProps {
-  rule: ContractRateRule
+  rule: APIRule
   isExpanded: boolean
   keyOptions: string[]
   onClick: () => void
-  onUpdateRule: (rule: ContractRateRule) => void
+  onUpdateRule: (rule: APIRule) => void
   onDeleteRule: () => void
 }
 
@@ -43,20 +38,16 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
   const body = (
     <Tabs
       value={rule.rate === null ? RuleBodyTab.Exclude : RuleBodyTab.Include}
-      className="h-full w-full p-2"
+      className="h-full w-full"
       onValueChange={(value) => {
         onUpdateRule({ ...rule, rate: value === RuleBodyTab.Include ? { t: RateType.Number, val: '0' } : null })
       }}
     >
-      <div className="flex justify-between">
-        <TabsList>
-          <TabsTrigger value={RuleBodyTab.Include}>Include</TabsTrigger>
-          <TabsTrigger value={RuleBodyTab.Exclude}>Exclude</TabsTrigger>
-        </TabsList>
-        <Button variant="ghost" size="sm" onClick={() => onDeleteRule()}>
-          <Trash />
-        </Button>
-      </div>
+      <TabsList>
+        <TabsTrigger value={RuleBodyTab.Include}>Include</TabsTrigger>
+        <TabsTrigger value={RuleBodyTab.Exclude}>Exclude</TabsTrigger>
+      </TabsList>
+
       <TabsContent value={RuleBodyTab.Include}>
         <div className="flex flex-col gap-2">
           {rule.rate && <RateEditor rate={rule.rate} onChange={(rate) => onUpdateRule({ ...rule, rate })} />}
@@ -72,7 +63,20 @@ export const RuleEditor = ({ rule, isExpanded, keyOptions, onClick, onUpdateRule
       <div className={`h-[68px] px-4 flex items-center w-full`}>
         <RuleHeader showPriority rule={rule} isExpanded={isExpanded} onClick={onClick} />
       </div>
-      {isExpanded && <div className="flex-1 w-full bg-purple-50">{body}</div>}
+      {isExpanded && (
+        <div className="flex-1 w-full bg-purple-50 p-4 flex flex-col gap-3">
+          <div className="flex gap-8 items-center">
+            <div className="flex gap-2 flex-1 items-center">
+              <Label>Name:</Label>
+              <Input value={rule.name} onChange={(e) => onUpdateRule({ ...rule, name: e.target.value })} />
+            </div>
+            <Button className="flex-shrink-0" variant="ghost" size="sm" onClick={() => onDeleteRule()}>
+              <Trash />
+            </Button>
+          </div>
+          {<div className="flex flex-col gap-2">{body}</div>}
+        </div>
+      )}
     </div>
   )
 }

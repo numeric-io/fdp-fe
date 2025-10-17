@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/numeric-ui/label'
 import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import {
   writeEditingRules,
   writeEditingRulesContractID,
   writeEditingRulesNull,
 } from '@/lib/store/stores/rateCalculator/write'
+import { APIRule } from '@numeric-io/fdp-api'
 import { useEffect, useState } from 'react'
 import { ReorderRulesGrid } from './ReorderRulesGrid'
 import './RulesEditor.css'
@@ -23,7 +23,7 @@ export const RulesEditor = ({ contractID, sku, onSelectSKU }: RulesEditorProps) 
   const editingRules = useEditingRulesBySKU(contractID, sku)
   const [isReordering, setIsReordering] = useState(false)
 
-  const onUpdateRules = (rules: ContractRateRule[]) => {
+  const onUpdateRules = (rules: APIRule[]) => {
     if (!sku) return
     writeEditingRules(rules)
   }

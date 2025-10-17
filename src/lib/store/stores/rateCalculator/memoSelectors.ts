@@ -1,4 +1,5 @@
 import { sortRules } from '@/components/ad-hoc/rateCalculator/rulesEditor/utils'
+import { APIRule } from '@numeric-io/fdp-api'
 import { useMemo } from 'react'
 import { useContract, useContractRateRules, useEditingRules, useEvents } from './getters'
 import type { ContractRateRule, Events, SKU } from './types'
@@ -40,7 +41,7 @@ export const useContractRateRulesByContractID = (contractID: string | null): Con
   }, [rateRules, contractID])
 }
 
-export const useContractRateRulesBysku = (contractID: string | null, sku: string | null): ContractRateRule[] => {
+export const useContractRateRulesBysku = (contractID: string | null, sku: string | null): APIRule[] => {
   const rateRules = useContractRateRulesByContractID(contractID)
 
   return useMemo(() => {
@@ -51,7 +52,7 @@ export const useContractRateRulesBysku = (contractID: string | null, sku: string
   }, [rateRules, sku])
 }
 
-export const useEditingRulesBySKU = (contractID: string | null, sku: string | null): ContractRateRule[] => {
+export const useEditingRulesBySKU = (contractID: string | null, sku: string | null): APIRule[] => {
   const editingRules = useEditingRules()
   const contractRateRules = useContractRateRulesBysku(contractID, sku)
   return useMemo(() => {
@@ -60,4 +61,20 @@ export const useEditingRulesBySKU = (contractID: string | null, sku: string | nu
     }
     return sortRules([...(editingRules?.rules ?? contractRateRules)])
   }, [editingRules, contractID, sku, contractRateRules])
+}
+
+export const useRuleNameToPriority = (
+  contractID: string | null,
+  sku: string | null
+): Partial<Record<string, number>> => {
+  const rules = useEditingRulesBySKU(contractID, sku)
+  return useMemo(() => {
+    return rules.reduce(
+      (acc, rule) => {
+        acc[rule.name] = rule.priority
+        return acc
+      },
+      {} as Record<string, number>
+    )
+  }, [rules])
 }

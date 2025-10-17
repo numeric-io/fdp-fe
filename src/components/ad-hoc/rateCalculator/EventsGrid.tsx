@@ -6,6 +6,7 @@ import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { fetchEvents } from '@/lib/store/stores/api'
 import { useEditingRules, useEvents } from '@/lib/store/stores/rateCalculator/getters'
+import { useRuleNameToPriority } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import type { Events } from '@/lib/store/stores/rateCalculator/types'
 import { writeEditingRulesPeriod } from '@/lib/store/stores/rateCalculator/write'
 import { SelectValue } from '@radix-ui/react-select'
@@ -15,11 +16,7 @@ import { useContext, useEffect, useMemo, useState } from 'react'
 
 ModuleRegistry.registerModules([AllCommunityModule])
 
-const getRulePriority = (ruleID: string | undefined): number | null => {
-  const match = ruleID?.match(/Rule-(\d+)/)
-  if (!match) return null
-  return parseFloat(match[1])
-}
+const UNMATCHED_RULE_NAME = 'Unmatched'
 
 const HIGH_PRIORITY_KEYS = ['Salesforce_SKU', 'AGREEMENT_CHANNEL', 'BILLABLE_EVENT_TYPE']
 
@@ -33,6 +30,7 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
   const [query, setQuery] = useState('')
   const location = useCurrentLocation()
   const editingRules = useEditingRules()
+  const ruleNameToPriority = useRuleNameToPriority(contractID ?? null, editingRules?.sku ?? null)
   const period = editingRules?.period ?? DEFAULT_PERIOD
   // const editingRules = useEditingRules()
   // TODO: scope events to contractID later
@@ -61,23 +59,11 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
   const colDefs = useMemo<ColDef<Events>[]>(
     () => [
       {
-        field: 'rule_id',
-        headerName: 'Rule ID',
+        field: 'matched_rule.name',
+        headerName: 'Rule Name',
         rowGroup: true,
         hide: true,
-        valueGetter: (params) => params.data?.rule_id?.replace('preview-', 'Rule-') ?? 'Unmatched',
-        comparator: (valueA, valueB) => {
-          console.log(valueA, valueB)
-          // Unmatched events should be at the bottom
-          if (valueA === 'Unmatched') return 1
-          if (valueB === 'Unmatched') return -1
-          // Otherwise, sort by rule ID
-          const priorityA = getRulePriority(valueA)
-          const priorityB = getRulePriority(valueB)
-          if (priorityA === null) return 1
-          if (priorityB === null) return -1
-          return priorityA - priorityB
-        },
+        valueGetter: (params) => params.data?.matched_rule?.name ?? UNMATCHED_RULE_NAME,
       },
       ...HIGH_PRIORITY_KEYS.map((key) => ({
         field: `content.${key}` as any,
@@ -85,14 +71,15 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
         valueGetter: (params: any) => (params.data?.content as any)?.[key],
       })),
       {
-        field: 'evaluated_rate',
-        headerName: 'Rate',
-        valueGetter: (params) =>
-          params.data?.rule_id === null
-            ? 'Unmatched'
-            : params.data?.evaluated_rate === null
-              ? 'Excluded'
-              : params.data?.evaluated_rate,
+        field: 'matched_rule.evaluated_rate',
+        headerName: 'Evaluated Rate',
+        type: 'numericColumn',
+        valueGetter: (params) => {
+          if (!params.data) return ''
+          if (params.data.matched_rule === null) return 'Unmatched'
+          if (params.data.matched_rule.evaluated_rate === null) return 'Excluded'
+          return params.data.matched_rule.evaluated_rate
+        },
       },
       ...Array.from(eventKeys)
         .filter((key) => !HIGH_PRIORITY_KEYS.includes(key))
@@ -127,23 +114,30 @@ export const EventsGrid = ({ contractID }: EventsGridProps) => {
           columnDefs={colDefs}
           rowData={events}
           quickFilterText={query}
-          groupDisplayType="groupRows"
+          groupDisplayType="singleColumn"
           autoGroupColumnDef={{
-            headerName: 'Rule ID',
+            headerName: 'Matched Rule',
+            pinned: 'left',
+            sortable: false,
             sort: 'asc',
-            comparator: (valueA, valueB) => {
-              // Unmatched events should be at the bottom
-              if (valueA === 'Unmatched') return 1
-              if (valueB === 'Unmatched') return -1
-              // Otherwise, sort by rule ID
-              const priorityA = getRulePriority(valueA)
-              const priorityB = getRulePriority(valueB)
-              if (priorityA === null) return 1
-              if (priorityB === null) return -1
-              return priorityA - priorityB
+            comparator: (ruleNameA, ruleNameB) => {
+              // Unmatched rules should be at the bottom
+              if (ruleNameA === UNMATCHED_RULE_NAME) return 1
+              if (ruleNameB === UNMATCHED_RULE_NAME) return -1
+              const priorityA = ruleNameToPriority[ruleNameA]
+              const priorityB = ruleNameToPriority[ruleNameB]
+
+              return (priorityA ?? 0) - (priorityB ?? 0)
             },
           }}
-          groupDefaultExpanded={-1}
+          alwaysMultiSort
+          onRowDataUpdated={({ api }) => {
+            api.forEachNode((node) => {
+              if (!node.group) return
+              // Expand the unmatched rule when data is updated
+              node.setExpanded(node.key === UNMATCHED_RULE_NAME)
+            })
+          }}
         />
       </div>
     </div>

@@ -1,11 +1,11 @@
 import { Text } from '@/components/ui/numeric-ui/text'
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
 import { cn } from '@/lib/utils'
+import { APIRule } from '@numeric-io/fdp-api'
 import { ChevronDown } from 'lucide-react'
 
 export interface RuleHeaderProps {
   showPriority?: boolean
-  rule: ContractRateRule
+  rule: APIRule
   isExpanded?: boolean
   onClick?: () => void
 }
@@ -16,7 +16,7 @@ export const RuleHeader = ({ showPriority = false, rule, isExpanded = false, onC
       <div className="flex gap-4 flex-1">
         {showPriority && <div>{rule.priority}</div>}
         <div className="flex flex-col gap-1">
-          <Text>{`Rule-${rule.priority}`}</Text>
+          <Text>{rule.name}</Text>
           {/* <Text>{`RuleHeader: ${rule.id}`}</Text> */}
           {/* <Text>{`No matches yet`}</Text> */}
         </div>

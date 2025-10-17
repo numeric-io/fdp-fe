@@ -5,7 +5,7 @@ import { LocationType } from '@/lib/routing/types'
 import { useCurrentLocation } from '@/lib/routing/useCurrentLocation'
 import { useNavigateTo } from '@/lib/routing/useNavigateTo'
 import { saveRules } from '@/lib/store/stores/api'
-import { useContractRateRules, useEditingRules } from '@/lib/store/stores/rateCalculator/getters'
+import { useEditingRules } from '@/lib/store/stores/rateCalculator/getters'
 import { useEditingRulesBySKU } from '@/lib/store/stores/rateCalculator/memoSelectors'
 import {
   AllCommunityModule,
@@ -38,7 +38,6 @@ export const POC = () => {
   const { client } = useContext(AppContext)
   const contractID = location.type === LocationType.RuleEditor ? location.contractID : null
   const sku = location.type === LocationType.RuleEditor ? location.SKU : null
-  const rules = useContractRateRules()
   // TODO: no need to rerender when this changes, move this into Button handler
   const editingRulesBySKU = useEditingRulesBySKU(contractID, sku)
   const editingRules = useEditingRules()
@@ -89,10 +88,10 @@ export const POC = () => {
                 size="sm"
                 onClick={() => {
                   if (location.SKU === null || editingRules === null) return
-                  const otherSKURules = rules.filter((rule) => rule.sku !== location.SKU)
                   saveRules(client, {
+                    sku: location.SKU,
                     contractID: location.contractID,
-                    rules: [...editingRulesBySKU, ...otherSKURules],
+                    rules: editingRulesBySKU,
                     month: editingRules.period.month,
                     year: editingRules.period.year,
                   })

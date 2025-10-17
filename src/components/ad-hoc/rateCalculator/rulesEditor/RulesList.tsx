@@ -1,39 +1,38 @@
 import { Button } from '@/components/ui/button'
 import { useKeyOptionsByContractID } from '@/lib/store/stores/rateCalculator/memoSelectors'
-import { ContractRateRule, SKU } from '@/lib/store/stores/rateCalculator/types'
 import { generateShortUID } from '@/lib/utils'
-import { ComparisonType, Operator, RateType } from '@numeric-io/fdp-api'
+import { APIRule, ComparisonType, Operator, RateType } from '@numeric-io/fdp-api'
 import { useState } from 'react'
 import { RuleEditor } from './RuleEditor'
 
 interface RulesListProps {
   contractID: string
   sku: string | null
-  rules: ContractRateRule[]
-  updateRules: (rules: ContractRateRule[]) => void
+  rules: APIRule[]
+  updateRules: (rules: APIRule[]) => void
 }
 
 export const RulesList = ({ contractID, sku, rules, updateRules }: RulesListProps) => {
   const keyOptions = useKeyOptionsByContractID(contractID)
-  const [expandedRuleIDs, setExpandedRuleIDs] = useState<string[]>([])
+  const [expandedRuleIndices, setExpandedRuleIndices] = useState<number[]>([])
   if (!sku) {
     return null
   }
   return (
     <div className="h-full flex flex-col gap-2 overflow-auto">
-      {rules.map((rule) => (
+      {rules.map((rule, index) => (
         <RuleEditor
-          key={rule.id}
+          key={index}
           rule={rule}
-          isExpanded={expandedRuleIDs.includes(rule.id)}
+          isExpanded={expandedRuleIndices.includes(index)}
           keyOptions={keyOptions}
           onClick={() =>
-            setExpandedRuleIDs((prev) =>
-              prev.includes(rule.id) ? prev.filter((id) => id !== rule.id) : [...prev, rule.id]
+            setExpandedRuleIndices((prev) =>
+              prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
             )
           }
-          onDeleteRule={() => updateRules(rules.filter((r) => r.id !== rule.id))}
-          onUpdateRule={(rule) => updateRules(rules.map((r) => (r.id === rule.id ? rule : r)))}
+          onDeleteRule={() => updateRules(rules.filter((r, i) => i !== index))}
+          onUpdateRule={(rule) => updateRules(rules.map((r, i) => (i === index ? rule : r)))}
         />
       ))}
       <Button
@@ -43,13 +42,10 @@ export const RulesList = ({ contractID, sku, rules, updateRules }: RulesListProp
           const maxPriority = rules.length ? Math.max(...rules.map((rule) => rule.priority)) : 0
           const newRule = createDefaultRule({
             priority: maxPriority + 1,
-            sku,
-            contractID,
           })
-          const newRuleID = newRule.id
 
           updateRules([...rules, newRule])
-          setExpandedRuleIDs((prev) => [...prev, newRuleID]) // Expand the new rule by default
+          setExpandedRuleIndices((prev) => [...prev, rules.length]) // Expand the new rule by default
         }}
       >
         + Add Rule
@@ -58,20 +54,11 @@ export const RulesList = ({ contractID, sku, rules, updateRules }: RulesListProp
   )
 }
 
-const createDefaultRule = ({
-  priority,
-  sku,
-  contractID,
-}: {
-  priority: number
-  sku: SKU
-  contractID: string
-}): ContractRateRule => {
+const createDefaultRule = ({ priority }: { priority: number }): APIRule => {
+  const randomUID = generateShortUID(4)
   return {
-    id: `RULE-${generateShortUID(4)}`,
+    name: `Rule ${randomUID}`,
     priority,
-    sku,
-    contract_id: contractID,
     andExpression: {
       op: Operator.And,
       conditions: [

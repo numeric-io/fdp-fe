@@ -1,6 +1,6 @@
 import { IBackendAPIClient } from '@/api-client/IBackendAPIClient'
 import {
-  CreateRuleRequest,
+  APIRule,
   GetBillingRecordsAPI,
   GetContractRulesAPI,
   GetContractsAPI,
@@ -8,7 +8,6 @@ import {
   SaveContractRulesAPI,
 } from '@numeric-io/fdp-api'
 import { Temporal } from '@numeric-io/temporal'
-import { ContractRateRule } from './rateCalculator/types'
 import { writeClearingRules, writeContractRateRules, writeContracts, writeEvents } from './rateCalculator/write'
 
 export async function fetchContracts(client: IBackendAPIClient | null) {
@@ -25,7 +24,7 @@ export async function fetchRules(client: IBackendAPIClient | null, contractID: s
   const rulesRes = await client.request(GetContractRulesAPI, { contract_id: contractID })
   if (!rulesRes || !rulesRes.ok) return console.error('No rules found')
 
-  writeContractRateRules(rulesRes.data.rules as ContractRateRule[])
+  writeContractRateRules(rulesRes.data.rules)
 }
 
 export async function fetchEvents(
@@ -57,7 +56,7 @@ export const runRules = async (
     contractID: string
     sku: string
     period: { month: number; year: number }
-    rules: CreateRuleRequest[]
+    rules: APIRule[]
   }
 ) => {
   if (!client) return console.error('Client not found')
@@ -81,12 +80,14 @@ export const saveRules = async (
   client: IBackendAPIClient | null,
   {
     contractID,
+    sku,
     rules,
     month,
     year,
   }: {
     contractID: string
-    rules: CreateRuleRequest[]
+    sku: string
+    rules: APIRule[]
     month: number
     year: number
   }
@@ -97,12 +98,13 @@ export const saveRules = async (
 
   const rulesRes = await client.request(SaveContractRulesAPI, {
     contract_id: contractID,
+    sku,
     rules,
     start_date: startOfMonth,
     end_date: endOfMonth,
   })
   if (!rulesRes || !rulesRes.ok) return console.error('No rules found')
 
-  writeContractRateRules(rulesRes.data.rules)
+  writeContractRateRules(rulesRes.data.rules.map((rule) => ({ ...rule, contract_id: contractID, sku })))
   writeClearingRules()
 }

@@ -1,12 +1,12 @@
-import { ContractRateRule } from '@/lib/store/stores/rateCalculator/types'
+import { APIRule } from '@numeric-io/fdp-api'
 import { ICellRendererParams } from 'ag-grid-community'
 import { AgGridReact } from 'ag-grid-react'
 import { RuleHeader } from './RuleHeader'
 import { RULE_HEADER_HEIGHT } from './utils'
 
 interface ReorderRulesGridProps {
-  rules: ContractRateRule[]
-  updateRules: (rules: ContractRateRule[]) => void
+  rules: APIRule[]
+  updateRules: (rules: APIRule[]) => void
 }
 
 export const ReorderRulesGrid = ({ rules, updateRules }: ReorderRulesGridProps) => {
@@ -17,13 +17,13 @@ export const ReorderRulesGrid = ({ rules, updateRules }: ReorderRulesGridProps) 
         className="rules-editor-grid"
         columnDefs={[
           {
-            field: 'id',
-            headerName: 'ID',
+            field: 'name',
+            headerName: 'Name',
             flex: 1,
             rowDrag: true,
             cellClass: 'rules-editor-grid-header',
             sortable: false,
-            cellRenderer: (params: ICellRendererParams<ContractRateRule>) => {
+            cellRenderer: (params: ICellRendererParams<APIRule>) => {
               if (!params.data) return null
               return <RuleHeader rule={params.data} />
             },
@@ -37,14 +37,14 @@ export const ReorderRulesGrid = ({ rules, updateRules }: ReorderRulesGridProps) 
         rowDragManaged
         rowHeight={RULE_HEADER_HEIGHT}
         onRowDragEnd={(event) => {
-          const newRuleIDToPriority: Record<string, number> = {}
+          const newRuleNameToPriority: Record<string, number> = {}
           event.api.forEachNode((node, index) => {
-            const rowID = node.data?.id
-            if (!rowID) return
-            newRuleIDToPriority[rowID] = index + 1
+            const ruleName = node.data?.name
+            if (!ruleName) return
+            newRuleNameToPriority[ruleName] = index + 1
           })
           const newRules = rules.map((rule) => {
-            const newPriority = newRuleIDToPriority[rule.id]
+            const newPriority = newRuleNameToPriority[rule.name]
             if (newPriority === undefined) return rule
             return { ...rule, priority: newPriority }
           })
